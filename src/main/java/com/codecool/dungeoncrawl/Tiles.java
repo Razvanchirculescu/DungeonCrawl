@@ -3,7 +3,6 @@ package com.codecool.dungeoncrawl;
 import com.codecool.dungeoncrawl.logic.Drawable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +27,14 @@ public class Tiles {
         tileMap.put("floor", new Tile(2, 0));
         tileMap.put("player", new Tile(27, 0));
         tileMap.put("skeleton", new Tile(29, 6));
+        tileMap.put("creepyBug", new Tile(30, 5));
+        tileMap.put("sword", new Tile(0, 30));
+        tileMap.put("key", new Tile(16, 23));
+        tileMap.put("casper", new Tile(27, 6));
+        tileMap.put("yellowDoor", new Tile(6, 10));
+        tileMap.put("bluePotion", new Tile(25, 23));
+        tileMap.put("casperCross", new Tile(1, 14));
+        tileMap.put("openDoor", new Tile(8, 10));
     }
 
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {

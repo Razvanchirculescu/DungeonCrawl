@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl.logic;
 
+import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.Skeleton;
 import org.junit.jupiter.api.Test;
@@ -14,9 +15,14 @@ class ActorTest {
         Player player = new Player(gameMap.getCell(1, 1));
         player.move(1, 0);
 
+//        Skeleton skeleton = new Skeleton(gameMap.getCell(1,1));
+
+//        gameMap.getCell(1,1).setActor(skeleton);
+
         assertEquals(2, player.getX());
         assertEquals(1, player.getY());
         assertEquals(null, gameMap.getCell(1, 1).getActor());
+//        assertEquals(skeleton, gameMap.getCell(1, 1).getActor());
         assertEquals(player, gameMap.getCell(2, 1).getActor());
     }
 
