@@ -4,8 +4,10 @@ import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import org.postgresql.ds.PGSimpleDataSource;
 
+
 import javax.sql.DataSource;
 import java.sql.SQLException;
+
 
 public class GameDatabaseManager {
     private PlayerDao playerDao;
