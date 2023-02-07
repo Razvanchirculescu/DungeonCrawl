@@ -19,7 +19,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -117,6 +116,16 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    private void showSaveDialogBox(){
+        TextInputDialog saveDialogBox = new TextInputDialog("Save");
+//        nameInputDialogBox.contentTextProperty().set("-fx-font-family: 'serif'");
+        saveDialogBox.setTitle("Save Game");
+        saveDialogBox.setHeaderText("Please enter details for your save");
+        Optional<String> result = saveDialogBox.showAndWait();
+        System.out.println(result);
+//        result.ifPresent(name -> //playerNameLabel.setText(name));   --- add save details to db?
+    }
+
     private void onKeyPressed(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case UP:
@@ -158,21 +167,27 @@ public class Main extends Application {
             case A:
                 context.setFill(Color.BLACK);
                 context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                context.translate(100,0);
+                context.translate(100, 0);
                 refresh();
                 break;
             case D:
                 context.setFill(Color.BLACK);
                 context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                context.translate(-100,0);
+                context.translate(-100, 0);
                 refresh();
                 break;
+            case F2:
+                showSaveDialogBox();
+                break;
+//            case CONTROL:
+
+
         }
         checkGameOver();
         checkWin();
     }
 
-    private void refresh() {
+        private void refresh() {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getWidth(); x++) {
@@ -220,42 +235,38 @@ public class Main extends Application {
             Dialog gameOverDialog = new Dialog();
             gameOverDialog.setTitle("Bad luck!");
             gameOverDialog.setContentText("Game Over\n Restart?");
-            gameOverDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-            gameOverDialog.getDialogPane().getButtonTypes().add(ButtonType.NO);
-            Optional result = gameOverDialog.showAndWait();
-            if (!(result.isPresent() && result.get() == ButtonType.OK)) {
-                System.exit(0);
-            }
-            map = MapLoader.loadMap();
-            refresh();
+            gameOverSelection(gameOverDialog);
         }
+    }
+
+    private void gameOverSelection(Dialog gameOverDialog) {
+        gameOverDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        gameOverDialog.getDialogPane().getButtonTypes().add(ButtonType.NO);
+        Optional result = gameOverDialog.showAndWait();
+        if (!(result.isPresent() && result.get() == ButtonType.OK)) {
+            System.exit(0);
+        }
+        map = MapLoader.loadMap();
+        refresh();
     }
 
     public void checkWin() {
         ArrayList<Actor> actors = new ArrayList<>();
-        for(int x=0; x<map.getWidth(); x++) {
-            for(int y=0; y< map.getHeight(); y++) {
-                if(!Objects.equals(map.getCell(x,y).getActor(), null)) {
-                    actors.add(map.getCell(x,y).getActor());
+        for (int x = 0; x < map.getWidth(); x++) {
+            for (int y = 0; y < map.getHeight(); y++) {
+                if (!Objects.equals(map.getCell(x, y).getActor(), null)) {
+                    actors.add(map.getCell(x, y).getActor());
                 }
             }
         }
-        if(actors.size() == 1) {
-            if(actors.get(0) instanceof Player) {
+        if (actors.size() == 1) {
+            if (actors.get(0) instanceof Player) {
                 Dialog winDialog = new Dialog();
                 winDialog.setTitle("Congratulation!");
                 winDialog.setContentText("You won\n Restart?");
-                winDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-                winDialog.getDialogPane().getButtonTypes().add(ButtonType.NO);
-                Optional result = winDialog.showAndWait();
-                if(!(result.isPresent() && result.get() == ButtonType.OK)){
-                    System.exit(0);
-                }
-                map = MapLoader.loadMap();
-                refresh();
+                gameOverSelection(winDialog);
             }
         }
-        System.out.println(actors);
     }
 
 
