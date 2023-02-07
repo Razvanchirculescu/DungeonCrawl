@@ -9,6 +9,7 @@ import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.util.Music;
 import com.codecool.dungeoncrawl.logic.items.Sword;
+import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -46,6 +47,8 @@ public class Main extends Application {
     Label bluePotionLabel = new Label();
     Label damageLabel = new Label();
     Label playerNameLabel = new Label();
+
+
 
 
     public static void main(String[] args) {
@@ -95,11 +98,17 @@ public class Main extends Application {
         borderPane.setCenter(canvas);
         borderPane.setRight(ui);
 
+
         Button quitButton = new Button();
         quitButton.setText("Quit Game");
         quitButton.setFocusTraversable(false);
         ui.add(quitButton, 0, 20);
         quitButton.setOnAction(actionEvent -> System.exit(0));
+
+//        Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
+//        StyleManager.getInstance().addUserAgentStylesheet(getClass()
+//                .getResource("src/main/java/com/codecool/dungeoncrawl/style.css").toString());
+
 
         TextInputDialog nameInputDialogBox = new TextInputDialog("Name goes here");
 //        nameInputDialogBox.contentTextProperty().set("-fx-font-family: 'serif'");
