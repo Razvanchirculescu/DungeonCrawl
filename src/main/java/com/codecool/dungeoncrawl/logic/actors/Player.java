@@ -77,7 +77,8 @@ public class Player extends Actor {
                 destroyGrave.play();
                 this.getCell().getItem().killCasper();
                 this.getCell().setItem(null);
-            } else {
+            } else if (this.getCell().getItem().getTileName().equals("sword") ||
+                    this.getCell().getItem().getTileName().equals("key")) {
                 this.getItems().add(this.getCell().getItem());
                 inventoryPickUpItem = new Music("src/main/resources/mixkit-magic-sweep-game-trophy-257.wav");
                 inventoryPickUpItem.play();
