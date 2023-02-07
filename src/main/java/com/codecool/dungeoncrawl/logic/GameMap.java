@@ -1,19 +1,23 @@
 package com.codecool.dungeoncrawl.logic;
 
-import com.codecool.dungeoncrawl.logic.actors.Casper;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 
 public class GameMap {
-    private int width;
-    private int height;
+    private int mapWidth;
+
+    private int mapHeight;
+    private int displayWidth;
+    private int displayHeight;
     private Cell[][] cells;
 
     private Player player;
 
 
-    public GameMap(int width, int height, CellType defaultCellType) {
-        this.width = width;
-        this.height = height;
+    public GameMap(int width, int height, int displayWidth, int displayHeight, CellType defaultCellType) {
+        this.mapWidth = width;
+        this.mapHeight = height;
+        this.displayHeight = displayHeight;
+        this.displayWidth = displayWidth;
         cells = new Cell[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -34,12 +38,21 @@ public class GameMap {
         return player;
     }
 
-    public int getWidth() {
-        return width;
+    public int getMapWidth() {
+        return mapWidth;
     }
 
-    public int getHeight() {
-        return height;
+    public int getMapHeight() {
+        return mapHeight;
     }
+
+    public int getDisplayHeight() {
+        return displayHeight;
+    }
+
+    public int getDisplayWidth() {
+        return displayWidth;
+    }
+
 
 }

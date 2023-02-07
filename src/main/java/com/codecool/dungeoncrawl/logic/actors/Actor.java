@@ -19,8 +19,8 @@ public abstract class Actor implements Drawable {
     }
 
     public void move(int dx, int dy) {
-        if (!((cell.getX() + dx) < 0 || (cell.getX() + dx) > (cell.getGameMap().getWidth() - 1) ||
-                (cell.getY() + dy) < 0 || (cell.getY() + dy) > (cell.getGameMap().getHeight() - 1))) {
+        if (!((cell.getX() + dx) < 0 || (cell.getX() + dx) > (cell.getGameMap().getMapWidth() - 1) ||
+                (cell.getY() + dy) < 0 || (cell.getY() + dy) > (cell.getGameMap().getMapHeight() - 1))) {
             Cell nextCell = cell.getNeighbor(dx, dy);
             if (!Objects.equals(nextCell.getTileName(), "wall") &&
                     !Objects.equals(nextCell.getActor().getTileName(), "skeleton")) {
@@ -29,8 +29,8 @@ public abstract class Actor implements Drawable {
                 cell = nextCell;
             }
         }
-        if (!((cell.getX() + dx) < 0 || (cell.getX() + dx) > (cell.getGameMap().getWidth() - 1) ||
-                (cell.getY() + dy) < 0 || (cell.getY() + dy) > (cell.getGameMap().getHeight() - 1))) {
+        if (!((cell.getX() + dx) < 0 || (cell.getX() + dx) > (cell.getGameMap().getMapWidth() - 1) ||
+                (cell.getY() + dy) < 0 || (cell.getY() + dy) > (cell.getGameMap().getMapHeight() - 1))) {
             Cell nextCell = cell.getNeighbor(dx, dy);
             if (!Objects.equals(nextCell.getTileName(), "wall") && ((nextCell.getActor() == null) ||
                     !Objects.equals(nextCell.getActor().getTileName(), "skeleton"))) {
