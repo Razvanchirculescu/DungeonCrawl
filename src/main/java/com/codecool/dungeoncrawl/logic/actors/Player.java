@@ -15,6 +15,7 @@ public class Player extends Actor {
     Music attackSoundEffect;
     Music inventoryPickUpItem;
     Music openDoor;
+    String playerName = "name";
 
     public Player(Cell cell) {
 
@@ -139,5 +140,10 @@ public class Player extends Actor {
                 getItems().remove(key);
             }
         }
+    }
+
+    //WIP by AdiB
+    public String getName() {
+        return playerName;
     }
 }

@@ -77,11 +77,11 @@ public class Main extends Application {
         ui.add(new Label("Health: "), 0, 2);
         ui.add(new Label("Damage: "), 0, 3);
         ui.add(new Label("Inventory: "), 0, 4);
-        ui.add(new Label("-swords: "), 0, 5);
+        ui.add(new Label("    -swords: "), 0, 5);
         ui.add(new Label("  Press S to increase damage "), 0, 6);
-        ui.add(new Label("-keys: "), 0, 7);
+        ui.add(new Label("    -keys: "), 0, 7);
         ui.add(new Label("  Press K to use key"), 0, 8);
-        ui.add(new Label("-blue potions: "), 0, 9);
+        ui.add(new Label("    -blue potions: "), 0, 9);
         ui.add(new Label("  Press B to increase health"), 0, 10);
         ui.add(playerNameLabel, 1, 1);
         ui.add(healthLabel, 1, 2);
