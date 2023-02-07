@@ -20,10 +20,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.scene.input.*;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.List;
 import java.util.Optional;
 
 public class Main extends Application {
@@ -127,7 +127,11 @@ public class Main extends Application {
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
+        if (keyEvent.isControlDown()&& keyEvent.getCode()==KeyCode.S){
+             showSaveDialogBox();
+        }
         switch (keyEvent.getCode()) {
+
             case UP:
                 map.getPlayer().move(0, -1);
                 setSoundIsPlaying(footstepsSoundEffect, true);
@@ -154,6 +158,7 @@ public class Main extends Application {
                 break;
             case S:
                 map.getPlayer().useItem("sword");
+                System.out.println(keyEvent.getCode());
                 refresh();
                 break;
             case B:
@@ -176,12 +181,6 @@ public class Main extends Application {
                 context.translate(-100, 0);
                 refresh();
                 break;
-            case F2:
-                showSaveDialogBox();
-                break;
-//            case CONTROL:
-
-
         }
         checkGameOver();
         checkWin();
