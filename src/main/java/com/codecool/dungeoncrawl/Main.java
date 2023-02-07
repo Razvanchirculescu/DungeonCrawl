@@ -28,6 +28,8 @@ import java.util.Objects;
 import java.util.List;
 import java.util.Optional;
 
+import static com.sun.javafx.scene.control.skin.Utils.getResource;
+
 public class Main extends Application {
 
     Music gameplayMusic;
@@ -105,9 +107,12 @@ public class Main extends Application {
         ui.add(quitButton, 0, 20);
         quitButton.setOnAction(actionEvent -> System.exit(0));
 
-//        Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
+
+        Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
 //        StyleManager.getInstance().addUserAgentStylesheet(getClass()
-//                .getResource("src/main/java/com/codecool/dungeoncrawl/style.css").toString());
+//                .getResource("src/main/resources/style.css").toString());
+//        StyleManager.getInstance().addUserAgentStylesheet(getResource("src/main/resources/style.css").toString());
+        StyleManager.getInstance().addUserAgentStylesheet("-fx-font-family: 'serif'");
 
 
         TextInputDialog nameInputDialogBox = new TextInputDialog("Name goes here");
