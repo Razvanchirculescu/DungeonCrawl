@@ -9,9 +9,11 @@ import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.util.Music;
 import com.codecool.dungeoncrawl.logic.items.Sword;
-import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -24,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.scene.input.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -106,6 +109,28 @@ public class Main extends Application {
         quitButton.setFocusTraversable(false);
         ui.add(quitButton, 0, 20);
         quitButton.setOnAction(actionEvent -> System.exit(0));
+
+        Button loadButton = new Button();
+        loadButton.setText("Load Saved Game");
+        loadButton.setFocusTraversable(false);
+        ui.add(loadButton, 0, 21);
+        loadButton.setOnAction(actionEvent -> {
+            List<String> savedGamesList = new ArrayList<>();
+            savedGamesList.add("Save1");
+            savedGamesList.add("Save2");
+            savedGamesList.add("Save3");
+            savedGamesList.add("Save4");
+            ChoiceDialog<String> loadGameDialog = new ChoiceDialog<>("Save1", savedGamesList);
+            loadGameDialog.setTitle("Load Game");
+            loadGameDialog.setHeaderText("");
+            loadGameDialog.setContentText("Choose a save to load");
+            Optional<String> result = loadGameDialog.showAndWait();
+            if(result.isPresent()){
+                //load saved game
+            }
+
+
+        });
 
 
 //        Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
