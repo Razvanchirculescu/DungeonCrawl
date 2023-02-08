@@ -203,6 +203,7 @@ public class Main extends Application {
                         map.getPlayer().move(0, 1);
                     }
                 }
+
                 refresh(deltaX, deltaY);
                 break;
             case LEFT:
@@ -291,7 +292,7 @@ public class Main extends Application {
         for (int x = 0; x < map.getDisplayWidth(); x++) {
             for (int y = 0; y < map.getDisplayHeight(); y++) {
                 if (map.getCell(x, y).getActor() instanceof Casper) {
-                    ((Casper) map.getCell(x+deltaX, y+deltaY).getActor()).autoMove();
+                    ((Casper) map.getCell(x, y).getActor()).autoMove();
                 }
             }
         }
