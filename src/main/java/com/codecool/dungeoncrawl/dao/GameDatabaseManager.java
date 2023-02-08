@@ -1,6 +1,11 @@
 package com.codecool.dungeoncrawl.dao;
 
+import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.items.Item;
+import com.codecool.dungeoncrawl.model.ActorModel;
+import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.ItemModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import org.postgresql.ds.PGSimpleDataSource;
 
@@ -10,21 +15,31 @@ import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.util.Scanner; // Import the Scanner class to read text files
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
+import java.sql.*;
 
 
 
 public class GameDatabaseManager {
-    private PlayerDao playerDao;
+    private ActorDaoJdbc actorDao;
+    private ItemDaoJdbc itemDao;
+    private ActorModel actorModel;
+
+
 
     public void setup() throws SQLException, FileNotFoundException {
         DataSource dataSource = connect();
-        playerDao = new PlayerDaoJdbc(dataSource);
+        actorDao = new ActorDaoJdbc(dataSource);
+        itemDao = new ItemDaoJdbc(dataSource);
     }
 
-    public void savePlayer(Player player) {
-        PlayerModel model = new PlayerModel(player);
-        playerDao.add(model);
+    public void savePlayer(Actor player) {
+        ActorModel model = new ActorModel(player);
+        actorDao.add(model);
+    }
+
+    public void saveItems(Item item) {
+        ItemModel model = new ItemModel(item);
+        itemDao.add(model);
     }
 
     private DataSource connect() throws SQLException, FileNotFoundException {
@@ -70,4 +85,6 @@ public class GameDatabaseManager {
 
         return dataSource;
     }
+
+
 }

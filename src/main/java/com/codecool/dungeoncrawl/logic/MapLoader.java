@@ -12,10 +12,11 @@ import java.util.Scanner;
 public class MapLoader {
     public static GameMap loadMap() {
         InputStream is = MapLoader.class.getResourceAsStream("/map2.txt");
-//        InputStream is = MapLoader.class.getResourceAsStream("/map.txt");
+        //InputStream is = MapLoader.class.getResourceAsStream("/map.txt");
         Scanner scanner = new Scanner(is);
         int mapWidth = scanner.nextInt();
         int mapHeight = scanner.nextInt();
+
 
         int displayWidth = 25;
         int diplayHeight = 20;

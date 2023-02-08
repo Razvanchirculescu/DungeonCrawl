@@ -15,6 +15,7 @@ public class Player extends Actor {
     Music attackSoundEffect;
     Music inventoryPickUpItem;
     Music openDoor;
+    String name;
     String playerName = "name";
 
     public Player(Cell cell) {
@@ -144,8 +145,11 @@ public class Player extends Actor {
         }
     }
 
-    //WIP by AdiB
+    public void setName(String name) {
+        this.name=name;
+    }
+
     public String getName() {
-        return playerName;
+        return name;
     }
 }
