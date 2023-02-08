@@ -237,6 +237,8 @@ public class Main extends Application {
             for (int y = 0; y < map.getHeight(); y++) {
                 if (!Objects.equals(map.getCell(x, y).getActor(), null)) {
                     dbManager.savePlayer(map.getCell(x, y).getActor());
+                } else if (!Objects.equals(map.getCell(x, y).getItem(), null)) {
+                    dbManager.saveItems(map.getCell(x, y).getItem());
                 }
             }
         }

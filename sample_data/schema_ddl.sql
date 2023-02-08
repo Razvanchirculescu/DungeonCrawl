@@ -1,12 +1,23 @@
 DROP TABLE IF EXISTS public.actor;
 CREATE TABLE public.actor (
-                              id serial NOT NULL PRIMARY KEY,
-                              actor_name text NOT NULL,
-                              hp integer NOT NULL,
-                              x integer NOT NULL,
-                              y integer NOT NULL,
-                              game_state_id integer NOT NULL
+  id serial NOT NULL PRIMARY KEY,
+  actor_name text NOT NULL,
+  hp integer NOT NULL,
+  x integer NOT NULL,
+  y integer NOT NULL,
+  game_state_id integer NOT NULL
 );
+
+
+DROP TABLE IF EXISTS public.item;
+CREATE TABLE public.item (
+   id serial NOT NULL PRIMARY KEY,
+   item_name text NOT NULL,
+   x integer NOT NULL,
+   y integer NOT NULL,
+   game_state_id integer NOT NULL
+);
+
 
 DROP TABLE IF EXISTS public.game_state;
 CREATE TABLE public.game_state (
@@ -15,6 +26,7 @@ CREATE TABLE public.game_state (
     saved_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     save_name text NOT NULL
 );
+
 
 INSERT INTO game_state (current_map, save_name)
 VALUES ('map', 'Angi');
