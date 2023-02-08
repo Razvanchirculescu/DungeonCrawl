@@ -13,10 +13,7 @@ import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.codecool.dungeoncrawl.util.Music;
 import com.codecool.dungeoncrawl.logic.items.Sword;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -31,6 +28,7 @@ import javafx.scene.input.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -306,8 +304,8 @@ public class Main extends Application {
 
     private void saveInDb() {
         setupDbManager();
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
+        for (int x = 0; x < map.getMapWidth(); x++) {
+            for (int y = 0; y < map.getMapHeight(); y++) {
                 if (!Objects.equals(map.getCell(x, y).getActor(), null)) {
                     dbManager.savePlayer(map.getCell(x, y).getActor());
                 } else if (!Objects.equals(map.getCell(x, y).getItem(), null)) {
@@ -365,6 +363,8 @@ public class Main extends Application {
             dbManager.setup();
         } catch (SQLException ex) {
             System.out.println("Cannot connect to database.");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
