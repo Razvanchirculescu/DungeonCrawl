@@ -121,3 +121,6 @@ target/
 /env_var_folder/*
 
 *.env
+.env
+
+

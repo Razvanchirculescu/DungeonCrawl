@@ -12,6 +12,9 @@ import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.codecool.dungeoncrawl.util.Music;
 import com.codecool.dungeoncrawl.logic.items.Sword;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -161,7 +164,6 @@ public class Main extends Application {
         scene.setOnKeyPressed(this::onKeyPressed);
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
-//        saveInDb();
     }
 
     private void showSaveDialogBox(){
@@ -213,7 +215,6 @@ public class Main extends Application {
                         map.getPlayer().move(0, 1);
                     }
                 }
-
                 refresh(deltaX, deltaY);
                 break;
             case LEFT:
@@ -282,7 +283,6 @@ public class Main extends Application {
                 }
             }
         }
-
         healthLabel.setText("" + map.getPlayer().getHealth());
         damageLabel.setText("" + map.getPlayer().getDamage());
         int swords = 0;
@@ -375,22 +375,34 @@ public class Main extends Application {
         }
     }
 
+    //tests on row 82 !!!
     public PlayerModel setPlayerModel (Player player)
     {
         return new PlayerModel(player);
     }
 
     //get the current time in SQL format
-    public java.util.Date getCurrentSQLTime () {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
+    public Date getCurrentSQLTime () {
+//        Calendar calendar = Calendar.getInstance();
+//        return calendar.getTime();
+        return Date.valueOf(LocalDate.now());
     }
 
-    public String getStringMap (Map map) {
-        String mapString = null;
+    public <K> String getStringObjJackson(K obj) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(obj);
+    }
 
+    public <K> String getStringObjGson (K obj) {
+        return new Gson().toJson(obj);
+    }
 
-        return mapString;
+    public GameMap getObjFromJSON_Gson (String mapString) {
+        return new Gson().fromJson(mapString,GameMap.class);
+    }
+
+    public String getObjFromJSON_Gson2 (String mapString) {
+        return new Gson().fromJson(mapString,String.class);
     }
 
     public GameState setGameState (String currentMap, Date currentDate, PlayerModel playerModel)
