@@ -8,7 +8,6 @@ import java.util.List;
 
 public class ActorDaoJdbc implements ActorDao {
     private DataSource dataSource;
-
     public ActorDaoJdbc(DataSource dataSource) {
         this.dataSource = dataSource;
     }

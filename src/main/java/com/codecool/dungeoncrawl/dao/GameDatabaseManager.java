@@ -1,12 +1,10 @@
 package com.codecool.dungeoncrawl.dao;
 
 import com.codecool.dungeoncrawl.logic.actors.Actor;
-import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.items.Item;
 import com.codecool.dungeoncrawl.model.ActorModel;
-import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.ItemModel;
-import com.codecool.dungeoncrawl.model.PlayerModel;
 import org.postgresql.ds.PGSimpleDataSource;
 
 
@@ -23,6 +21,7 @@ public class GameDatabaseManager {
     private ActorDaoJdbc actorDao;
     private ItemDaoJdbc itemDao;
     private ActorModel actorModel;
+    private GameStateDao gameStateDao;
 
 
 
@@ -30,6 +29,7 @@ public class GameDatabaseManager {
         DataSource dataSource = connect();
         actorDao = new ActorDaoJdbc(dataSource);
         itemDao = new ItemDaoJdbc(dataSource);
+        gameStateDao = new GameStateDaoJdbc(dataSource);
     }
 
     public void savePlayer(Actor player) {
@@ -40,6 +40,11 @@ public class GameDatabaseManager {
     public void saveItems(Item item) {
         ItemModel model = new ItemModel(item);
         itemDao.add(model);
+    }
+
+    public void saveGameState(String name) {
+        GameStateModel model = new GameStateModel(name, new Date(System.currentTimeMillis()));
+        gameStateDao.add(model);
     }
 
     private DataSource connect() throws SQLException, FileNotFoundException {
