@@ -122,8 +122,7 @@ public class Main extends Application {
         saveDialogBox.setTitle("Save Game");
         saveDialogBox.setHeaderText("Please enter details for your save");
         Optional<String> result = saveDialogBox.showAndWait();
-        System.out.println(result);
-//        result.ifPresent(name -> //playerNameLabel.setText(name));   --- add save details to db?
+        String savedGameName = result.get();
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
