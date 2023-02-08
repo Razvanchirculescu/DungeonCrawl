@@ -157,7 +157,6 @@ public class Main extends Application {
                 break;
             case S:
                 map.getPlayer().useItem("sword");
-                System.out.println(keyEvent.getCode());
                 refresh();
                 break;
             case B:
