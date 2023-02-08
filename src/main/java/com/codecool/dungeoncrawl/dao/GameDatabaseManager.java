@@ -9,8 +9,15 @@ import com.codecool.dungeoncrawl.model.ItemModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import org.postgresql.ds.PGSimpleDataSource;
 
+
+import java.io.File;  // Import the File class
+import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.util.Scanner; // Import the Scanner class to read text files
+
 import javax.sql.DataSource;
 import java.sql.*;
+
+
 
 public class GameDatabaseManager {
     private ActorDaoJdbc actorDao;
@@ -19,7 +26,7 @@ public class GameDatabaseManager {
 
 
 
-    public void setup() throws SQLException {
+    public void setup() throws SQLException, FileNotFoundException {
         DataSource dataSource = connect();
         actorDao = new ActorDaoJdbc(dataSource);
         itemDao = new ItemDaoJdbc(dataSource);
@@ -35,11 +42,38 @@ public class GameDatabaseManager {
         itemDao.add(model);
     }
 
-    private DataSource connect() throws SQLException {
+    private DataSource connect() throws SQLException, FileNotFoundException {
+
+        String dbName = null;
+        String user = null;
+        String password = null;
+
+
+        try {
+            File myObj = new File("src/main/java/com/codecool/dungeoncrawl/.env");
+            Scanner myReader = new Scanner(myObj);
+            for (int i=0; i<3; i++) {
+                String data = myReader.nextLine();
+                if (i == 0) {
+                    dbName = data;
+                } else if (i == 1) {
+                    user = data;
+                } else {
+                    password = data;
+                }
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred. File not found!");
+            e.printStackTrace();
+        }
+
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        String dbName = "dungeonCrawl";
-        String user = "postgres";
-        String password = "Geogra1.";
 
         dataSource.setDatabaseName(dbName);
         dataSource.setUser(user);
