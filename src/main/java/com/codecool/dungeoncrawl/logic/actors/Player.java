@@ -15,6 +15,7 @@ public class Player extends Actor {
     Music attackSoundEffect;
     Music inventoryPickUpItem;
     Music openDoor;
+    String playerName = "name";
 
     public Player(Cell cell) {
 
@@ -77,7 +78,8 @@ public class Player extends Actor {
                 destroyGrave.play();
                 this.getCell().getItem().killCasper();
                 this.getCell().setItem(null);
-            } else {
+            } else if (this.getCell().getItem().getTileName().equals("sword") ||
+                    this.getCell().getItem().getTileName().equals("key")) {
                 this.getItems().add(this.getCell().getItem());
                 inventoryPickUpItem = new Music("src/main/resources/mixkit-magic-sweep-game-trophy-257.wav");
                 inventoryPickUpItem.play();
@@ -139,5 +141,10 @@ public class Player extends Actor {
                 getItems().remove(key);
             }
         }
+    }
+
+    //WIP by AdiB
+    public String getName() {
+        return playerName;
     }
 }

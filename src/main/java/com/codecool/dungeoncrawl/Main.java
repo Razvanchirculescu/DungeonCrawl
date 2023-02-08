@@ -9,6 +9,7 @@ import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.util.Music;
 import com.codecool.dungeoncrawl.logic.items.Sword;
+import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -35,8 +36,8 @@ public class Main extends Application {
 
     GameMap map = MapLoader.loadMap();
     Canvas canvas = new Canvas(
-            map.getWidth() * Tiles.TILE_WIDTH,
-            map.getHeight() * Tiles.TILE_WIDTH);
+            map.getDisplayWidth() * Tiles.TILE_WIDTH,
+            map.getDisplayHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
     Label itemInventoryLabel = new Label();
@@ -45,6 +46,12 @@ public class Main extends Application {
     Label bluePotionLabel = new Label();
     Label damageLabel = new Label();
     Label playerNameLabel = new Label();
+
+
+    int deltaX =0;
+    int deltaY =0;
+
+
 
 
     public static void main(String[] args) {
@@ -76,11 +83,11 @@ public class Main extends Application {
         ui.add(new Label("Health: "), 0, 2);
         ui.add(new Label("Damage: "), 0, 3);
         ui.add(new Label("Inventory: "), 0, 4);
-        ui.add(new Label("-swords: "), 0, 5);
+        ui.add(new Label("    -swords: "), 0, 5);
         ui.add(new Label("  Press S to increase damage "), 0, 6);
-        ui.add(new Label("-keys: "), 0, 7);
+        ui.add(new Label("    -keys: "), 0, 7);
         ui.add(new Label("  Press K to use key"), 0, 8);
-        ui.add(new Label("-blue potions: "), 0, 9);
+        ui.add(new Label("    -blue potions: "), 0, 9);
         ui.add(new Label("  Press B to increase health"), 0, 10);
         ui.add(playerNameLabel, 1, 1);
         ui.add(healthLabel, 1, 2);
@@ -100,6 +107,14 @@ public class Main extends Application {
         ui.add(quitButton, 0, 20);
         quitButton.setOnAction(actionEvent -> System.exit(0));
 
+
+        Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
+//        StyleManager.getInstance().addUserAgentStylesheet(getClass()
+//                .getResource("src/main/resources/style.css").toString());
+//        StyleManager.getInstance().addUserAgentStylesheet(getResource("src/main/resources/style.css").toString());
+        StyleManager.getInstance().addUserAgentStylesheet("-fx-font-family: 'serif'");
+
+
         TextInputDialog nameInputDialogBox = new TextInputDialog("Name goes here");
 //        nameInputDialogBox.contentTextProperty().set("-fx-font-family: 'serif'");
         nameInputDialogBox.setTitle("NameBox");
@@ -110,7 +125,7 @@ public class Main extends Application {
         Scene scene = new Scene(borderPane);
         scene.getRoot().setStyle("-fx-font-family: 'serif'");
         primaryStage.setScene(scene);
-        refresh();
+        refresh(deltaX, deltaY);
         scene.setOnKeyPressed(this::onKeyPressed);
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
@@ -130,66 +145,113 @@ public class Main extends Application {
              showSaveDialogBox();
         }
         switch (keyEvent.getCode()) {
-
             case UP:
-                map.getPlayer().move(0, -1);
+                if (deltaY==0) {
+                    map.getPlayer().move(0, -1);
+                } else if ((deltaY>= map.getMapHeight()-map.getDisplayHeight()) &&
+                        (map.getPlayer().getY() >
+                                (map.getMapHeight()-(map.getDisplayHeight()-1)/2))) {
+                    map.getPlayer().move(0, -1);
+                } else {
+                    deltaY -= 1;
+                    map.getPlayer().move(0, -1);
+                }
                 setSoundIsPlaying(footstepsSoundEffect, true);
-                refresh();
+                refresh(deltaX, deltaY);
                 break;
+//                map.getPlayer().move(0, -1);
+//                setSoundIsPlaying(footstepsSoundEffect, true);
+//                refresh();
+//                break;
             case DOWN:
-                map.getPlayer().move(0, 1);
+                if (deltaY==0 && (map.getPlayer().getY() < (map.getDisplayHeight()-1)/2)) {
+                    map.getPlayer().move(0, 1);
+                } else if (deltaY >= (map.getMapHeight()-map.getDisplayHeight())) {
+                    map.getPlayer().move(0, 1);
+                } else {
+                    deltaY += 1;
+                    map.getPlayer().move(0, 1);
+                }
                 setSoundIsPlaying(footstepsSoundEffect, true);
-                refresh();
+                refresh(deltaX, deltaY);
                 break;
+//                map.getPlayer().move(0, 1);
+//                setSoundIsPlaying(footstepsSoundEffect, true);
+//                refresh();
+//                break;
             case LEFT:
-                map.getPlayer().move(-1, 0);
+                if (deltaX==0) {
+                    map.getPlayer().move(-1, 0);
+                } else if ((deltaX>= map.getMapWidth()-map.getDisplayWidth()) &&
+                        (map.getPlayer().getX() >
+                                (map.getMapWidth()-(map.getDisplayWidth()-1)/2))) {
+                    map.getPlayer().move(-1, 0);
+                } else {
+                    deltaX -= 1;
+                    map.getPlayer().move(-1, 0);
+                }
                 setSoundIsPlaying(footstepsSoundEffect, true);
-                refresh();
+                refresh(deltaX, deltaY);
                 break;
+//                map.getPlayer().move(-1, 0);
+//                setSoundIsPlaying(footstepsSoundEffect, true);
+//                refresh();
+//                break;
             case RIGHT:
-                map.getPlayer().move(1, 0);
+                if (deltaX==0 && (map.getPlayer().getX() < (map.getDisplayWidth()-1)/2)) {
+                    map.getPlayer().move(1, 0);
+                } else if (deltaX >= (map.getMapWidth()-map.getDisplayWidth())) {
+                    map.getPlayer().move(1, 0);
+                } else {
+                    deltaX += 1;
+                    map.getPlayer().move(1, 0);
+                }
                 setSoundIsPlaying(footstepsSoundEffect, true);
-                refresh();
+                refresh(deltaX, deltaY);
                 break;
+//                map.getPlayer().move(1, 0);
+//                setSoundIsPlaying(footstepsSoundEffect, true);
+//                refresh();
+//                break;
             case ENTER:
                 map.getPlayer().pickUpItem();
-                refresh();
+                refresh(deltaX, deltaY);
                 break;
             case S:
                 map.getPlayer().useItem("sword");
-                refresh();
+                refresh(deltaX, deltaY);
                 break;
             case B:
                 map.getPlayer().useItem("bluePotion");
-                refresh();
+                refresh(deltaX, deltaY);
                 break;
             case K:
                 map.getPlayer().openDoor();
-                refresh();
+                refresh(deltaX, deltaY);
                 break;
             case A:
                 context.setFill(Color.BLACK);
                 context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                context.translate(100, 0);
-                refresh();
+                context.translate(100,0);
+                refresh(deltaX, deltaY);
                 break;
             case D:
                 context.setFill(Color.BLACK);
                 context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                context.translate(-100, 0);
-                refresh();
+                context.translate(-100,0);
+                refresh(deltaX, deltaY);
                 break;
         }
         checkGameOver();
         checkWin();
     }
 
-        private void refresh() {
+    private void refresh(int deltaX, int deltaY) {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
-                Cell cell = map.getCell(x, y);
+        for (int x = 0; x < map.getDisplayWidth(); x++) {
+            for (int y = 0; y < map.getDisplayHeight(); y++) {
+                Cell cell = map.getCell(x+deltaX, y+deltaY);
                 if (cell.getActor() != null) {
                     Tiles.drawTile(context, cell.getActor(), x, y);
                 } else if (cell.getItem() != null) {
@@ -216,10 +278,10 @@ public class Main extends Application {
         swordLabel.setText(String.valueOf(swords));
         keysLabel.setText(String.valueOf(keys));
         bluePotionLabel.setText(String.valueOf(bluePotion));
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
+        for (int x = 0; x < map.getDisplayWidth(); x++) {
+            for (int y = 0; y < map.getDisplayHeight(); y++) {
                 if (map.getCell(x, y).getActor() instanceof Casper) {
-                    ((Casper) map.getCell(x, y).getActor()).autoMove();
+                    ((Casper) map.getCell(x+deltaX, y+deltaY).getActor()).autoMove();
                 }
             }
         }
@@ -232,6 +294,15 @@ public class Main extends Application {
             Dialog gameOverDialog = new Dialog();
             gameOverDialog.setTitle("Bad luck!");
             gameOverDialog.setContentText("Game Over\n Restart?");
+            gameOverDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            gameOverDialog.getDialogPane().getButtonTypes().add(ButtonType.NO);
+            Optional result = gameOverDialog.showAndWait();
+            if (!(result.isPresent() && result.get() == ButtonType.OK)) {
+                System.exit(0);
+            }
+            map = MapLoader.loadMap();
+            refresh(deltaX, deltaY);
+        }
             gameOverSelection(gameOverDialog);
         }
     }
@@ -262,6 +333,14 @@ public class Main extends Application {
                 winDialog.setTitle("Congratulation!");
                 winDialog.setContentText("You won\n Restart?");
                 gameOverSelection(winDialog);
+                winDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+                winDialog.getDialogPane().getButtonTypes().add(ButtonType.NO);
+                Optional result = winDialog.showAndWait();
+                if(!(result.isPresent() && result.get() == ButtonType.OK)){
+                    System.exit(0);
+                }
+                map = MapLoader.loadMap();
+                refresh(deltaX, deltaY);;
             }
         }
     }

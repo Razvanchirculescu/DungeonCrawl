@@ -11,18 +11,22 @@ import java.util.Scanner;
 
 public class MapLoader {
     public static GameMap loadMap() {
-//        InputStream is = MapLoader.class.getResourceAsStream("/map2.txt");
-        InputStream is = MapLoader.class.getResourceAsStream("/map.txt");
+        InputStream is = MapLoader.class.getResourceAsStream("/map2.txt");
+//        InputStream is = MapLoader.class.getResourceAsStream("/map.txt");
         Scanner scanner = new Scanner(is);
-        int width = scanner.nextInt();
-        int height = scanner.nextInt();
+        int mapWidth = scanner.nextInt();
+        int mapHeight = scanner.nextInt();
+
+        int displayWidth = 25;
+        int diplayHeight = 20;
 
         scanner.nextLine(); // empty line
 
-        GameMap map = new GameMap(width, height, CellType.EMPTY);
-        for (int y = 0; y < height; y++) {
+        GameMap map = new GameMap(mapWidth, mapHeight, displayWidth, diplayHeight, CellType.EMPTY);
+
+        for (int y = 0; y < mapHeight; y++) {
             String line = scanner.nextLine();
-            for (int x = 0; x < width; x++) {
+            for (int x = 0; x < mapWidth; x++) {
                 if (x < line.length()) {
                     Cell cell = map.getCell(x, y);
                     switch (line.charAt(x)) {
