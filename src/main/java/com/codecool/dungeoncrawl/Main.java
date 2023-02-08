@@ -156,8 +156,10 @@ public class Main extends Application {
                                 (map.getMapHeight()-(map.getDisplayHeight()-1)/2))) {
                     map.getPlayer().move(0, -1);
                 } else {
-                    deltaY -= 1;
-                    map.getPlayer().move(0, -1);
+                    if (map.getPlayer().validMove(0,-1)) {
+                        deltaY -= 1;
+                        map.getPlayer().move(0, -1);
+                    }
                 }
                 refresh(deltaX, deltaY);
                 break;
@@ -168,8 +170,10 @@ public class Main extends Application {
                 } else if (deltaY >= (map.getMapHeight()-map.getDisplayHeight())) {
                     map.getPlayer().move(0, 1);
                 } else {
-                    deltaY += 1;
-                    map.getPlayer().move(0, 1);
+                    if (map.getPlayer().validMove(0,1)) {
+                        deltaY += 1;
+                        map.getPlayer().move(0, 1);
+                    }
                 }
                 refresh(deltaX, deltaY);
                 break;
@@ -182,8 +186,10 @@ public class Main extends Application {
                                 (map.getMapWidth()-(map.getDisplayWidth()-1)/2))) {
                     map.getPlayer().move(-1, 0);
                 } else {
-                    deltaX -= 1;
-                    map.getPlayer().move(-1, 0);
+                    if (map.getPlayer().validMove(-1,0)) {
+                        deltaX -= 1;
+                        map.getPlayer().move(-1, 0);
+                    }
                 }
                 refresh(deltaX, deltaY);
                 break;
@@ -194,8 +200,10 @@ public class Main extends Application {
                 } else if (deltaX >= (map.getMapWidth()-map.getDisplayWidth())) {
                     map.getPlayer().move(1, 0);
                 } else {
-                    deltaX += 1;
-                    map.getPlayer().move(1, 0);
+                    if (map.getPlayer().validMove(1,0)) {
+                        deltaX += 1;
+                        map.getPlayer().move(1, 0);
+                    }
                 }
                 refresh(deltaX, deltaY);
                 break;
