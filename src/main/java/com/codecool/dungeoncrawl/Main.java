@@ -173,7 +173,7 @@ public class Main extends Application {
         scene.setOnKeyPressed(this::onKeyPressed);
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
-        saveInDb();
+//        saveInDb();
     }
 
     private void showSaveDialogBox(){
@@ -181,8 +181,15 @@ public class Main extends Application {
 //        nameInputDialogBox.contentTextProperty().set("-fx-font-family: 'serif'");
         saveDialogBox.setTitle("Save Game");
         saveDialogBox.setHeaderText("Please enter details for your save");
+        Button saveButton = (Button) saveDialogBox.getDialogPane().lookupButton(ButtonType.OK);
+        saveButton.setText("Save and continue");
         Optional<String> result = saveDialogBox.showAndWait();
-        String savedGameName = result.get();
+        if (result.isPresent()){
+            saveInDb();
+            System.out.println("Progress saved in the database!");
+        }
+
+
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {

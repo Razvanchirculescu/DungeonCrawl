@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS public.player;
+
+
 DROP TABLE IF EXISTS public.actor;
 CREATE TABLE public.actor (
   id serial NOT NULL PRIMARY KEY,
