@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl;
 
+import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
@@ -22,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
@@ -45,6 +47,7 @@ public class Main extends Application {
     Label bluePotionLabel = new Label();
     Label damageLabel = new Label();
     Label playerNameLabel = new Label();
+    GameDatabaseManager dbManager;
 
 
     public static void main(String[] args) {
@@ -105,7 +108,8 @@ public class Main extends Application {
         nameInputDialogBox.setTitle("NameBox");
         nameInputDialogBox.setHeaderText("Please enter your name below");
         Optional<String> result = nameInputDialogBox.showAndWait();
-        result.ifPresent(name -> playerNameLabel.setText(name));
+        String name = result.get();
+        playerNameLabel.setText(name);
 
         Scene scene = new Scene(borderPane);
         scene.getRoot().setStyle("-fx-font-family: 'serif'");
@@ -114,6 +118,7 @@ public class Main extends Application {
         scene.setOnKeyPressed(this::onKeyPressed);
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
+        saveInDb();
     }
 
     private void showSaveDialogBox(){
@@ -184,7 +189,7 @@ public class Main extends Application {
         checkWin();
     }
 
-        private void refresh() {
+    private void refresh() {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getWidth(); x++) {
@@ -199,6 +204,7 @@ public class Main extends Application {
                 }
             }
         }
+
         healthLabel.setText("" + map.getPlayer().getHealth());
         damageLabel.setText("" + map.getPlayer().getDamage());
         int swords = 0;
@@ -220,6 +226,17 @@ public class Main extends Application {
             for (int y = 0; y < map.getHeight(); y++) {
                 if (map.getCell(x, y).getActor() instanceof Casper) {
                     ((Casper) map.getCell(x, y).getActor()).autoMove();
+                }
+            }
+        }
+    }
+
+    private void saveInDb() {
+        setupDbManager();
+        for (int x = 0; x < map.getWidth(); x++) {
+            for (int y = 0; y < map.getHeight(); y++) {
+                if (!Objects.equals(map.getCell(x, y).getActor(), null)) {
+                    dbManager.savePlayer(map.getCell(x, y).getActor());
                 }
             }
         }
@@ -266,5 +283,12 @@ public class Main extends Application {
         }
     }
 
-
+    private void setupDbManager() {
+        dbManager = new GameDatabaseManager();
+        try {
+            dbManager.setup();
+        } catch (SQLException ex) {
+            System.out.println("Cannot connect to database.");
+        }
+    }
 }
