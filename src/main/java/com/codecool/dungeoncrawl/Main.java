@@ -86,13 +86,16 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 ////        TESTS for serializer
-//        PlayerModel playerModelTest = setPlayerModel(map.getPlayer());
-//        Date currentSQLTime = getCurrentSQLTime();
+        PlayerModel playerModelTest = setPlayerModel(map.getPlayer());
+        Date currentSQLTime = getCurrentSQLTime();
 //        String stringMap = getStringObjGson(map.getCell(7,1).getActor().getHealth());
-////        GameState gameStateTest = setGameState(stringMap, currentSQLTime, playerModelTest);
+        String stringMap = "map2.txt";
+        GameState gameStateTest = setGameState(stringMap, currentSQLTime, playerModelTest);
 //        System.out.println("TEST: "+stringMap);
-//        String testPlayer = getObjFromJSON_Gson2(stringMap);
-//        System.out.println("Back: "+testPlayer);
+        String testPlayer = getStringObjGson(gameStateTest);
+        System.out.println("Back: "+testPlayer);
+        GameState resultBack = getObjFromJSON_Gson(testPlayer);
+        System.out.println("result: "+resultBack.toString());
 
         GridPane ui = new GridPane();
         ui.setPrefWidth(300);
@@ -386,37 +389,25 @@ public class Main extends Application {
     }
 
     //tests on row 82 !!!
-    public PlayerModel setPlayerModel (Player player)
-    {
+    public PlayerModel setPlayerModel (Player player) {
         return new PlayerModel(player);
     }
 
-    //get the current time in SQL format
     public Date getCurrentSQLTime () {
-//        Calendar calendar = Calendar.getInstance();
-//        return calendar.getTime();
         return Date.valueOf(LocalDate.now());
     }
 
-    public <K> String getStringObjJackson(K obj) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(obj);
-    }
 
     public <K> String getStringObjGson (K obj) {
         return new Gson().toJson(obj);
     }
 
-    public GameMap getObjFromJSON_Gson (String mapString) {
-        return new Gson().fromJson(mapString,GameMap.class);
+    public GameState getObjFromJSON_Gson (String mapString) {
+        return new Gson().fromJson(mapString,GameState.class);
     }
 
-    public String getObjFromJSON_Gson2 (String mapString) {
-        return new Gson().fromJson(mapString,String.class);
-    }
 
-    public GameState setGameState (String currentMap, Date currentDate, PlayerModel playerModel)
-    {
+    public GameState setGameState (String currentMap, Date currentDate, PlayerModel playerModel) {
         return new GameState(currentMap, currentDate, playerModel);
     }
 
