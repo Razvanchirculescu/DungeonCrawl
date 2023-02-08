@@ -11,19 +11,19 @@ import javax.sql.DataSource;
 import java.sql.*;
 
 public class GameDatabaseManager {
-    private PlayerDao playerDao;
-    private ActorModel playerModel;
+    private ActorDaoJdbc actorDao;
+    private ActorModel actorModel;
 
 
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
-        playerDao = new PlayerDaoJdbc(dataSource);
+        actorDao = new ActorDaoJdbc(dataSource);
     }
 
     public void savePlayer(Actor player) {
         ActorModel model = new ActorModel(player);
-        playerDao.add(model);
+        actorDao.add(model);
     }
 
     private DataSource connect() throws SQLException {
