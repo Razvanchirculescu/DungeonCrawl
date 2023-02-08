@@ -8,6 +8,8 @@ import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.Casper;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.items.Key;
+import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.codecool.dungeoncrawl.util.Music;
 import com.codecool.dungeoncrawl.logic.items.Sword;
 import javafx.application.Application;
@@ -26,6 +28,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -176,6 +181,7 @@ public class Main extends Application {
         }
         switch (keyEvent.getCode()) {
             case UP:
+                setSoundIsPlaying(footstepsSoundEffect, true);
                 if (deltaY==0) {
                     map.getPlayer().move(0, -1);
                 } else if ((deltaY>= map.getMapHeight()-map.getDisplayHeight()) &&
@@ -183,33 +189,30 @@ public class Main extends Application {
                                 (map.getMapHeight()-(map.getDisplayHeight()-1)/2))) {
                     map.getPlayer().move(0, -1);
                 } else {
-                    deltaY -= 1;
-                    map.getPlayer().move(0, -1);
+                    if (map.getPlayer().validMove(0,-1)) {
+                        deltaY -= 1;
+                        map.getPlayer().move(0, -1);
+                    }
                 }
-                setSoundIsPlaying(footstepsSoundEffect, true);
                 refresh(deltaX, deltaY);
                 break;
-//                map.getPlayer().move(0, -1);
-//                setSoundIsPlaying(footstepsSoundEffect, true);
-//                refresh();
-//                break;
             case DOWN:
+                setSoundIsPlaying(footstepsSoundEffect, true);
                 if (deltaY==0 && (map.getPlayer().getY() < (map.getDisplayHeight()-1)/2)) {
                     map.getPlayer().move(0, 1);
                 } else if (deltaY >= (map.getMapHeight()-map.getDisplayHeight())) {
                     map.getPlayer().move(0, 1);
                 } else {
-                    deltaY += 1;
-                    map.getPlayer().move(0, 1);
+                    if (map.getPlayer().validMove(0,1)) {
+                        deltaY += 1;
+                        map.getPlayer().move(0, 1);
+                    }
                 }
-                setSoundIsPlaying(footstepsSoundEffect, true);
+
                 refresh(deltaX, deltaY);
                 break;
-//                map.getPlayer().move(0, 1);
-//                setSoundIsPlaying(footstepsSoundEffect, true);
-//                refresh();
-//                break;
             case LEFT:
+                setSoundIsPlaying(footstepsSoundEffect, true);
                 if (deltaX==0) {
                     map.getPlayer().move(-1, 0);
                 } else if ((deltaX>= map.getMapWidth()-map.getDisplayWidth()) &&
@@ -217,32 +220,27 @@ public class Main extends Application {
                                 (map.getMapWidth()-(map.getDisplayWidth()-1)/2))) {
                     map.getPlayer().move(-1, 0);
                 } else {
-                    deltaX -= 1;
-                    map.getPlayer().move(-1, 0);
+                    if (map.getPlayer().validMove(-1,0)) {
+                        deltaX -= 1;
+                        map.getPlayer().move(-1, 0);
+                    }
                 }
-                setSoundIsPlaying(footstepsSoundEffect, true);
                 refresh(deltaX, deltaY);
                 break;
-//                map.getPlayer().move(-1, 0);
-//                setSoundIsPlaying(footstepsSoundEffect, true);
-//                refresh();
-//                break;
             case RIGHT:
+                setSoundIsPlaying(footstepsSoundEffect, true);
                 if (deltaX==0 && (map.getPlayer().getX() < (map.getDisplayWidth()-1)/2)) {
                     map.getPlayer().move(1, 0);
                 } else if (deltaX >= (map.getMapWidth()-map.getDisplayWidth())) {
                     map.getPlayer().move(1, 0);
                 } else {
-                    deltaX += 1;
-                    map.getPlayer().move(1, 0);
+                    if (map.getPlayer().validMove(1,0)) {
+                        deltaX += 1;
+                        map.getPlayer().move(1, 0);
+                    }
                 }
-                setSoundIsPlaying(footstepsSoundEffect, true);
                 refresh(deltaX, deltaY);
                 break;
-//                map.getPlayer().move(1, 0);
-//                setSoundIsPlaying(footstepsSoundEffect, true);
-//                refresh();
-//                break;
             case ENTER:
                 map.getPlayer().pickUpItem();
                 refresh(deltaX, deltaY);
@@ -257,18 +255,6 @@ public class Main extends Application {
                 break;
             case K:
                 map.getPlayer().openDoor();
-                refresh(deltaX, deltaY);
-                break;
-            case A:
-                context.setFill(Color.BLACK);
-                context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                context.translate(100, 0);
-                refresh(deltaX, deltaY);
-                break;
-            case D:
-                context.setFill(Color.BLACK);
-                context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                context.translate(-100, 0);
                 refresh(deltaX, deltaY);
                 break;
         }
@@ -312,7 +298,7 @@ public class Main extends Application {
         for (int x = 0; x < map.getDisplayWidth(); x++) {
             for (int y = 0; y < map.getDisplayHeight(); y++) {
                 if (map.getCell(x, y).getActor() instanceof Casper) {
-                    ((Casper) map.getCell(x+deltaX, y+deltaY).getActor()).autoMove();
+                    ((Casper) map.getCell(x, y).getActor()).autoMove();
                 }
             }
         }
@@ -381,4 +367,29 @@ public class Main extends Application {
             System.out.println("Cannot connect to database.");
         }
     }
+
+    public PlayerModel setPlayerModel (Player player)
+    {
+        return new PlayerModel(player);
+    }
+
+    //get the current time in SQL format
+    public java.util.Date getCurrentSQLTime () {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
+    }
+
+    public String getStringMap (Map map) {
+        String mapString = null;
+
+
+        return mapString;
+    }
+
+    public GameState setGameState (String currentMap, Date currentDate, PlayerModel playerModel)
+    {
+        return new GameState(currentMap, currentDate, playerModel);
+    }
+
+
 }

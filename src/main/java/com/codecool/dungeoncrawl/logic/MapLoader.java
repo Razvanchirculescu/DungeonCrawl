@@ -17,6 +17,7 @@ public class MapLoader {
         int mapWidth = scanner.nextInt();
         int mapHeight = scanner.nextInt();
 
+
         int displayWidth = 25;
         int diplayHeight = 20;
 
