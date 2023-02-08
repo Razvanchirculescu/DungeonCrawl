@@ -27,10 +27,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
-
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -39,12 +37,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class Main extends Application {
-
     Music gameplayMusic;
     Music inventoryPickUpSoundEffect;
     Music footstepsSoundEffect;
     Music attackSoundEffect;
-
     GameMap map = MapLoader.loadMap();
     Canvas canvas = new Canvas(
             map.getDisplayWidth() * Tiles.TILE_WIDTH,
@@ -58,8 +54,6 @@ public class Main extends Application {
     Label damageLabel = new Label();
     Label playerNameLabel = new Label();
     GameDatabaseManager dbManager;
-
-
     int deltaX =0;
     int deltaY =0;
 
@@ -134,11 +128,9 @@ public class Main extends Application {
             loadGameDialog.setHeaderText("");
             loadGameDialog.setContentText("Choose a save to load");
             Optional<String> result = loadGameDialog.showAndWait();
-            if(result.isPresent()){
+           // if(result.isPresent()){
                 //load saved game
-            }
-
-
+           // }
         });
 
 

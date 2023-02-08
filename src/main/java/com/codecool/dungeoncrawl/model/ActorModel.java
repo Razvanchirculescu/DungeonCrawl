@@ -1,7 +1,6 @@
 package com.codecool.dungeoncrawl.model;
 
 import com.codecool.dungeoncrawl.logic.actors.Actor;
-import com.codecool.dungeoncrawl.logic.actors.Player;
 
 public class ActorModel extends BaseModel{
 
@@ -11,10 +10,11 @@ public class ActorModel extends BaseModel{
     private int y;
 
 
-    public ActorModel(String actorName, int x, int y) {
+    public ActorModel(String actorName, int x, int y, int hp) {
         this.actorName = actorName;
         this.x = x;
         this.y = y;
+        this.hp = hp;
     }
 
     public ActorModel(Actor actor) {
