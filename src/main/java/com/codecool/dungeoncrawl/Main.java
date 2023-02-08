@@ -108,11 +108,11 @@ public class Main extends Application {
         quitButton.setOnAction(actionEvent -> System.exit(0));
 
 
-        Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
+//        Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
 //        StyleManager.getInstance().addUserAgentStylesheet(getClass()
 //                .getResource("src/main/resources/style.css").toString());
 //        StyleManager.getInstance().addUserAgentStylesheet(getResource("src/main/resources/style.css").toString());
-        StyleManager.getInstance().addUserAgentStylesheet("-fx-font-family: 'serif'");
+//        StyleManager.getInstance().addUserAgentStylesheet("-fx-font-family: 'serif'");
 
 
         TextInputDialog nameInputDialogBox = new TextInputDialog("Name goes here");
@@ -232,13 +232,13 @@ public class Main extends Application {
             case A:
                 context.setFill(Color.BLACK);
                 context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                context.translate(100,0);
+                context.translate(100, 0);
                 refresh(deltaX, deltaY);
                 break;
             case D:
                 context.setFill(Color.BLACK);
                 context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                context.translate(-100,0);
+                context.translate(-100, 0);
                 refresh(deltaX, deltaY);
                 break;
         }
@@ -288,21 +288,13 @@ public class Main extends Application {
     }
 
     public void checkGameOver() {
+        Dialog gameOverDialog = null;
         if (map.getPlayer().getHealth() <= 0) {
             Music gameOverSound = new Music("src/main/resources/mixkit-arcade-retro-game-over-213.wav");
             gameOverSound.play();
-            Dialog gameOverDialog = new Dialog();
+            gameOverDialog = new Dialog();
             gameOverDialog.setTitle("Bad luck!");
             gameOverDialog.setContentText("Game Over\n Restart?");
-            gameOverDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-            gameOverDialog.getDialogPane().getButtonTypes().add(ButtonType.NO);
-            Optional result = gameOverDialog.showAndWait();
-            if (!(result.isPresent() && result.get() == ButtonType.OK)) {
-                System.exit(0);
-            }
-            map = MapLoader.loadMap();
-            refresh(deltaX, deltaY);
-        }
             gameOverSelection(gameOverDialog);
         }
     }
@@ -315,13 +307,13 @@ public class Main extends Application {
             System.exit(0);
         }
         map = MapLoader.loadMap();
-        refresh();
+        refresh(deltaX, deltaY);
     }
 
     public void checkWin() {
         ArrayList<Actor> actors = new ArrayList<>();
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
+        for (int x = 0; x < map.getMapWidth(); x++) {
+            for (int y = 0; y < map.getMapHeight(); y++) {
                 if (!Objects.equals(map.getCell(x, y).getActor(), null)) {
                     actors.add(map.getCell(x, y).getActor());
                 }
@@ -333,14 +325,6 @@ public class Main extends Application {
                 winDialog.setTitle("Congratulation!");
                 winDialog.setContentText("You won\n Restart?");
                 gameOverSelection(winDialog);
-                winDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-                winDialog.getDialogPane().getButtonTypes().add(ButtonType.NO);
-                Optional result = winDialog.showAndWait();
-                if(!(result.isPresent() && result.get() == ButtonType.OK)){
-                    System.exit(0);
-                }
-                map = MapLoader.loadMap();
-                refresh(deltaX, deltaY);;
             }
         }
     }
