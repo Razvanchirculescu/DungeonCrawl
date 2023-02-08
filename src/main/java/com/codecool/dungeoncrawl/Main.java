@@ -11,7 +11,9 @@ import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.codecool.dungeoncrawl.util.Music;
 import com.codecool.dungeoncrawl.logic.items.Sword;
-import com.sun.javafx.css.StyleManager;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -56,6 +58,8 @@ public class Main extends Application {
 
 
 
+
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -75,6 +79,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+////        TESTS for serializer
+//        PlayerModel playerModelTest = setPlayerModel(map.getPlayer());
+//        Date currentSQLTime = getCurrentSQLTime();
+//        String stringMap = getStringObjGson(map.getCell(7,1).getActor().getHealth());
+////        GameState gameStateTest = setGameState(stringMap, currentSQLTime, playerModelTest);
+//        System.out.println("TEST: "+stringMap);
+//        String testPlayer = getObjFromJSON_Gson2(stringMap);
+//        System.out.println("Back: "+testPlayer);
+
         GridPane ui = new GridPane();
         ui.setPrefWidth(300);
         ui.setPadding(new Insets(10));
@@ -131,6 +144,7 @@ public class Main extends Application {
         scene.setOnKeyPressed(this::onKeyPressed);
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
+
     }
 
     private void showSaveDialogBox(){
@@ -312,28 +326,42 @@ public class Main extends Application {
     }
 
 
+    //tests on row 82 !!!
     public PlayerModel setPlayerModel (Player player)
     {
         return new PlayerModel(player);
     }
 
     //get the current time in SQL format
-    public java.util.Date getCurrentSQLTime () {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
+    public Date getCurrentSQLTime () {
+//        Calendar calendar = Calendar.getInstance();
+//        return calendar.getTime();
+        return Date.valueOf(LocalDate.now());
     }
 
-    public String getStringMap (Map map) {
-        String mapString = null;
+    public <K> String getStringObjJackson(K obj) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(obj);
+    }
 
+    public <K> String getStringObjGson (K obj) {
+        return new Gson().toJson(obj);
+    }
 
-        return mapString;
+    public GameMap getObjFromJSON_Gson (String mapString) {
+        return new Gson().fromJson(mapString,GameMap.class);
+    }
+
+    public String getObjFromJSON_Gson2 (String mapString) {
+        return new Gson().fromJson(mapString,String.class);
     }
 
     public GameState setGameState (String currentMap, Date currentDate, PlayerModel playerModel)
     {
         return new GameState(currentMap, currentDate, playerModel);
     }
+
+
 
 
 }
