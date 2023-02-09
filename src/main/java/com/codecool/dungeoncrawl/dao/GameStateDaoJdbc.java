@@ -40,15 +40,14 @@ public class GameStateDaoJdbc implements GameStateDao {
 
     public Object getId(String name) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT id FROM game_state WHERE save_name =?";
+            String sql = "SELECT id FROM game_state WHERE save_name = " + "'"+name+"'";
             PreparedStatement st = conn.prepareStatement(sql);
-            st.setString(1, name);
             ResultSet rs = st.executeQuery();
-            System.out.println(rs.getInt(1));
             if (!rs.next()) {
                 return null;
             }
-//            GameStateModel gameStateModel = new GameStateModel(rs.getString(1), rs.getString(2), rs.getDate(3));
+            int myId = rs.getInt(1);
+            System.out.println(myId);
             return rs.getObject(1);
         } catch (SQLException e) {
             throw new RuntimeException("Does not exist: " + name, e);

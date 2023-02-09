@@ -47,20 +47,21 @@ public class ActorDaoJdbc implements ActorDao {
     }
 
     @Override
-    public List<ActorModel> getAll() {
+    public List<ActorModel> getAll(int gameStateId) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT id, actor_name, hp, x, y FROM actor";
-            ResultSet rs = conn.createStatement().executeQuery(sql);
+            String sql = "SELECT id, actor_name, hp, x, y FROM actor WHERE game_state_id = ?";
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, gameStateId);
+            ResultSet rs = st.executeQuery();
             List<ActorModel> result = new ArrayList<>();
             while (rs.next()) { // while result set pointer is positioned before or on last row read authors
-                ActorModel author = new ActorModel(rs.getString(2), rs.getInt(3),
-                        rs.getInt(4), rs.getInt(5));
-                author.setId(rs.getInt(1));
-                result.add(author);
+                ActorModel actor = new ActorModel(rs.getString(2), rs.getInt(3),
+                rs.getInt(4), rs.getInt(5));
+                result.add(actor);
             }
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException("Error while reading all authors", e);
+            throw new RuntimeException("Error while reading all actors", e);
         }
     }
 }
