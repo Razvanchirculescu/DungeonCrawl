@@ -53,6 +53,10 @@ public class GameDatabaseManager {
         return  actorDao.getAll(getGameStateId(name));
     }
 
+    public List<ItemModel> listAllItem(String name) {
+        return  itemDao.getAll(getGameStateId(name));
+    }
+
     private DataSource connect() throws SQLException, FileNotFoundException {
 
         String dbName = null;

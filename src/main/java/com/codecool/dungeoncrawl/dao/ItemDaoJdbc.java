@@ -48,20 +48,22 @@ public class ItemDaoJdbc implements ItemDao{
     }
 
     @Override
-    public List<ItemModel> getAll() {
+    public List<ItemModel> getAll(int gameStateId) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT id, item_name, x, y FROM item";
-            ResultSet rs = conn.createStatement().executeQuery(sql);
+            String sql = "SELECT id, item_name, x, y FROM item WHERE game_state_id = ?";
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, gameStateId);
+            ResultSet rs = st.executeQuery();
             List<ItemModel> result = new ArrayList<>();
             while (rs.next()) { // while result set pointer is positioned before or on last row read authors
-                ItemModel item = new ItemModel(rs.getString(2), rs.getInt(3),
+                ItemModel itemModel = new ItemModel(rs.getString(2), rs.getInt(3),
                         rs.getInt(4));
-                item.setId(rs.getInt(1));
-                result.add(item);
+                result.add(itemModel);
             }
+            System.out.println(result);
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException("Error while reading all items", e);
+            throw new RuntimeException("Error while reading all actors", e);
         }
     }
 }
