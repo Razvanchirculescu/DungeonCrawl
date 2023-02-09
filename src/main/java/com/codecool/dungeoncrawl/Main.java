@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.*;
+import com.codecool.dungeoncrawl.logic.items.Item;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
@@ -31,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.codecool.dungeoncrawl.logic.MapLoader.populateBlankMap;
 
 public class Main extends Application {
     Music gameplayMusic;
@@ -69,7 +72,7 @@ public class Main extends Application {
         setupDbManager();
         List<String> names = dbManager.getAllNames();
         if(names.contains(name)) {
-            return MapLoader.loadBlankMap(name);
+            return MapLoader.loadBlankMap("/emptymap2.txt");
         } else {
             return MapLoader.loadMap();
         }
@@ -101,8 +104,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 ////        TESTS for serializer
-        PlayerModel playerModelTest = setPlayerModel(map.getPlayer());
-        Date currentSQLTime = getCurrentSQLTime();
+//        PlayerModel playerModelTest = setPlayerModel(map.getPlayer());
+//        Date currentSQLTime = getCurrentSQLTime();
 //        String stringMap = getStringObjGson(map.getCell(7,1).getActor().getHealth());
         String stringMap = "map2.txt";
 //        GameStateModel gameStateTest = setGameState(stringMap, currentSQLTime, playerModelTest);
@@ -193,7 +196,6 @@ public class Main extends Application {
         playerNameLabel.setText(userName);
         System.out.println(userName);
         getPlayerNameLabel();
-
         Scene scene = new Scene(borderPane);
         scene.getRoot().setStyle("-fx-font-family: 'serif'");
         primaryStage.setScene(scene);
@@ -202,9 +204,15 @@ public class Main extends Application {
         scene.setOnKeyPressed(this::onKeyPressed);
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
+
+    }
+
+    public GameMap populateGameMap() {
         DataLoader dataLoader = new DataLoader(dbManager, map);
-        dataLoader.getAllActors();
-        dataLoader.getAllItems();
+        List<Actor> actors = dataLoader.getAllActors();
+        List<Item> items = dataLoader.getAllItems();
+        GameMap savedMap = populateBlankMap(map, actors, items);
+        return savedMap;
     }
 
     public String getPlayerNameLabel() {
