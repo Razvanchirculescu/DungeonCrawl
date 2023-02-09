@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.items.Item;
 import com.codecool.dungeoncrawl.model.ActorModel;
 import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.ItemModel;
+import com.codecool.dungeoncrawl.model.PlayerModel;
 import org.postgresql.ds.PGSimpleDataSource;
 
 
@@ -32,18 +33,18 @@ public class GameDatabaseManager {
         gameStateDao = new GameStateDaoJdbc(dataSource);
     }
 
-    public void savePlayer(Actor player) {
+    public void savePlayer(Actor player, int gameStateId) {
         ActorModel model = new ActorModel(player);
-        actorDao.add(model);
+        actorDao.add(model, gameStateId);
     }
 
-    public void saveItems(Item item) {
+    public void saveItems(Item item, int gameStateId) {
         ItemModel model = new ItemModel(item);
-        itemDao.add(model);
+        itemDao.add(model, gameStateId);
     }
 
-    public void saveGameState(String name) {
-        GameStateModel model = new GameStateModel(name, new Date(System.currentTimeMillis()));
+    public void saveGameState(String map, String name) {
+        GameStateModel model = new GameStateModel(map, name, new Date(System.currentTimeMillis()));
         gameStateDao.add(model);
     }
 
@@ -92,4 +93,7 @@ public class GameDatabaseManager {
     }
 
 
+    public int getGameStateId(String name) {
+        return (int) gameStateDao.getId(name);
+    }
 }

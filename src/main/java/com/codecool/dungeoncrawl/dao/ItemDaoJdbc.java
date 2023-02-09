@@ -16,14 +16,14 @@ public class ItemDaoJdbc implements ItemDao{
     }
 
     @Override
-    public void add(ItemModel item) {
+    public void add(ItemModel item, int gameStateId) {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "INSERT INTO item (item_name, x, y, game_state_id) VALUES (?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, item.getItemName());
             statement.setInt(2, item.getX());
             statement.setInt(3, item.getY());
-            statement.setInt(4, 1);
+            statement.setInt(4, gameStateId);
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();

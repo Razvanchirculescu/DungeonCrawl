@@ -12,8 +12,6 @@ import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.codecool.dungeoncrawl.util.Music;
 import com.codecool.dungeoncrawl.logic.items.Sword;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -85,13 +83,13 @@ public class Main extends Application {
         Date currentSQLTime = getCurrentSQLTime();
 //        String stringMap = getStringObjGson(map.getCell(7,1).getActor().getHealth());
         String stringMap = "map2.txt";
-        GameState gameStateTest = setGameState(stringMap, currentSQLTime, playerModelTest);
+//        GameStateModel gameStateTest = setGameState(stringMap, currentSQLTime, playerModelTest);
 //        System.out.println("TEST: "+stringMap);
-        String testPlayer = getStringObjGson(gameStateTest);
-        System.out.println("Back: "+testPlayer);
-        GameState resultBack = getObjFromJSON_Gson(testPlayer);
-        System.out.println("result: "+resultBack.toString());
-        System.out.println("original: "+gameStateTest.toString());
+//        String testPlayer = getStringObjGson(gameStateTest);
+//        System.out.println("Back: "+testPlayer);
+//        GameStateModel resultBack = getObjFromJSON_Gson(testPlayer);
+//        System.out.println("result: "+resultBack.toString());
+//        System.out.println("original: "+gameStateTest.toString());
 
         GridPane ui = new GridPane();
         ui.setPrefWidth(300);
@@ -201,15 +199,17 @@ public class Main extends Application {
         saveButton.setText("Save and continue");
         Optional<String> result = saveDialogBox.showAndWait();
         if (result.isPresent()){
+            String name = result.get();
     //        private void saveInDb() {
             setupDbManager();
-            dbManager.saveGameState(result.get());
+            dbManager.saveGameState("/emptymap2.txt",name);
+            int gameStateId = dbManager.getGameStateId(name);
             for (int x = 0; x < map.getMapWidth(); x++) {
                 for (int y = 0; y < map.getMapHeight(); y++) {
                     if (!Objects.equals(map.getCell(x, y).getActor(), null)) {
-                        dbManager.savePlayer(map.getCell(x, y).getActor());
+                        dbManager.savePlayer(map.getCell(x, y).getActor(), gameStateId);
                     } else if (!Objects.equals(map.getCell(x, y).getItem(), null)) {
-                        dbManager.saveItems(map.getCell(x, y).getItem());
+                        dbManager.saveItems(map.getCell(x, y).getItem(), gameStateId);
                     }
                 }
             }
@@ -411,20 +411,12 @@ public class Main extends Application {
         return Date.valueOf(LocalDate.now());
     }
 
-
     public <K> String getStringObjGson (K obj) {
         return new Gson().toJson(obj);
     }
 
-    public GameState getObjFromJSON_Gson (String mapString) {
-        return new Gson().fromJson(mapString,GameState.class);
+    public GameStateModel getObjFromJSON_Gson (String mapString) {
+        return new Gson().fromJson(mapString, GameStateModel.class);
     }
-
-
-    public GameStateModel setGameState (String currentMap, Date currentDate)
-    {
-        return new GameStateModel(currentMap, currentDate);
-    }
-
 
 }
