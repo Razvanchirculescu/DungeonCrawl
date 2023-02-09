@@ -32,11 +32,11 @@ public class ActorDaoJdbc implements ActorDao {
     }
 
     @Override
-    public void update(ActorModel actor) {
+    public void update(ActorModel actor, int gameStateId) {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "UPDATE actor SET actor_name = ?, hp = ?, x = ?, y = ? WHERE game_state_id = ?";
             PreparedStatement st = conn.prepareStatement(sql);
-            st.setString(1, actor.getActorName());
+            st.setInt(1, gameStateId);
             st.setInt(2, actor.getHp());
             st.setInt(3, actor.getX());
             st.setInt(4, actor.getY());
@@ -49,7 +49,7 @@ public class ActorDaoJdbc implements ActorDao {
     @Override
     public List<ActorModel> getAll(int gameStateId) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT id, actor_name, hp, x, y FROM actor WHERE game_state_id = ?";
+            String sql = "SELECT id, actor_name, x, y, hp FROM actor WHERE game_state_id = ?";
             PreparedStatement st = conn.prepareStatement(sql);
             st.setInt(1, gameStateId);
             ResultSet rs = st.executeQuery();
