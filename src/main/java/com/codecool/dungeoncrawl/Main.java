@@ -173,10 +173,10 @@ public class Main extends Application {
         scene.setOnKeyPressed(this::onKeyPressed);
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
-//        saveInDb();
         setupDbManager();
-        getAllActors();
-        getAllItems();
+        DataLoader dataLoader = new DataLoader(dbManager, map);
+        dataLoader.getAllActors();
+        dataLoader.getAllItems();
     }
 
     //added for loading game with player in some random position on the map
@@ -197,40 +197,11 @@ public class Main extends Application {
         }
     }
 
-    private void showSaveDialogBox(){
-        TextInputDialog saveDialogBox = new TextInputDialog("Save");
-//        nameInputDialogBox.contentTextProperty().set("-fx-font-family: 'serif'");
-        saveDialogBox.setTitle("Save Game");
-        saveDialogBox.setHeaderText("Please enter details for your save");
-        Button saveButton = (Button) saveDialogBox.getDialogPane().lookupButton(ButtonType.OK);
-        saveButton.setText("Save and continue");
-        Optional<String> result = saveDialogBox.showAndWait();
-        if (result.isPresent()){
-            String name = result.get();
-    //        private void saveInDb() {
-
-            dbManager.saveGameState("/emptymap2.txt",name);
-            int gameStateId = dbManager.getGameStateId(name);
-            for (int x = 0; x < map.getMapWidth(); x++) {
-                for (int y = 0; y < map.getMapHeight(); y++) {
-                    if (!Objects.equals(map.getCell(x, y).getActor(), null)) {
-                        dbManager.savePlayer(map.getCell(x, y).getActor(), gameStateId);
-                    } else if (!Objects.equals(map.getCell(x, y).getItem(), null)) {
-                        dbManager.saveItems(map.getCell(x, y).getItem(), gameStateId);
-                    }
-                }
-            }
-            }
-  //          saveInDb();
-            System.out.println("Progress saved in the database!");
-        }
-
-
-
 
     private void onKeyPressed(KeyEvent keyEvent) {
         if (keyEvent.isControlDown()&& keyEvent.getCode()==KeyCode.S){
-             showSaveDialogBox();
+             DataSaver dataSaver = new DataSaver();
+             dataSaver.saveData(dbManager, map);
         }
         switch (keyEvent.getCode()) {
             case UP:
@@ -424,62 +395,6 @@ public class Main extends Application {
 
     public GameStateModel getObjFromJSON_Gson (String mapString) {
         return new Gson().fromJson(mapString, GameStateModel.class);
-    }
-
-    public List<Actor> getAllActors(){
-        List<ActorModel> actorModels = dbManager.listAllActors("oop");
-        List<Actor> actors = new ArrayList<>();
-        for(ActorModel actorModel: actorModels) {
-            Cell cell = map.getCell(actorModel.getX(), actorModel.getY());
-            Actor actor;
-            switch (actorModel.getActorName()) {
-                case "player":
-                    actor = new Player(cell);
-                    break;
-                case "casper":
-                    actor = new Casper(cell);
-                    break;
-                case "creepyBug":
-                    actor = new CreepyBug(cell);
-                    break;
-                default:
-                    actor = new Skeleton(cell);
-                    break;
-            }
-            actor.setHealth(actorModel.getHp());
-            actors.add(actor);
-        }
-        System.out.println(actors);
-        return actors;
-    }
-
-    public List<Item> getAllItems(){
-        List<ItemModel> itemModels = dbManager.listAllItem("oop");
-        List<Item> items = new ArrayList<>();
-        for(ItemModel itemModel: itemModels) {
-            Cell cell = map.getCell(itemModel.getX(), itemModel.getY());
-            Item item;
-            switch (itemModel.getItemName()) {
-                case "sword":
-                    item = new Sword(cell);
-                    break;
-                case "bluePotion":
-                    item = new BluePotion(cell);
-                    break;
-                case "yellowDoor":
-                    item = new YellowDoor(cell);
-                    break;
-                case "openDoor":
-                    item = new OpenDoor(cell);
-                    break;
-                default:
-                    item = new Key(cell);
-                    break;
-            }
-            items.add(item);
-        }
-        System.out.println(items);
-        return items;
     }
 
 }
