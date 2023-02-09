@@ -15,13 +15,14 @@ public class ActorDaoJdbc implements ActorDao {
     @Override
     public void add(ActorModel actor, int gameStateId) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "INSERT INTO actor (actor_name, hp, x, y, game_state_id) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO actor (actor_name, hp, x, y, dm, game_state_id) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, actor.getActorName());
             statement.setInt(2, actor.getHp());
             statement.setInt(3, actor.getX());
             statement.setInt(4, actor.getY());
-            statement.setInt(5, gameStateId);
+            statement.setInt(5, actor.getDm());
+            statement.setInt(6, gameStateId);
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();
@@ -49,16 +50,15 @@ public class ActorDaoJdbc implements ActorDao {
     @Override
     public List<ActorModel> getAll(int gameStateId) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT id, actor_name, x, y, hp FROM actor WHERE game_state_id = ?";
+            String sql = "SELECT id, actor_name, x, y, hp, dm FROM actor WHERE game_state_id = ?";
             PreparedStatement st = conn.prepareStatement(sql);
             st.setInt(1, gameStateId);
             ResultSet rs = st.executeQuery();
             List<ActorModel> result = new ArrayList<>();
             while (rs.next()) { // while result set pointer is positioned before or on last row read authors
                 ActorModel actor = new ActorModel(rs.getString(2), rs.getInt(3),
-                rs.getInt(4), rs.getInt(5));
+                rs.getInt(4), rs.getInt(5), rs.getInt(6));
                 result.add(actor);
-
             }
             System.out.println(result);
             return result;

@@ -8,6 +8,7 @@ CREATE TABLE public.actor (
   hp integer NOT NULL,
   x integer NOT NULL,
   y integer NOT NULL,
+  dm integer,
   game_state_id integer NOT NULL
 );
 
@@ -29,11 +30,6 @@ CREATE TABLE public.game_state (
     saved_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     save_name text NOT NULL
 );
-
-
-INSERT INTO game_state (current_map, save_name)
-VALUES ('map', 'Angi');
-
 
 ALTER TABLE ONLY public.actor
     ADD CONSTRAINT fk_game_state_id FOREIGN KEY (game_state_id) REFERENCES public.game_state(id);

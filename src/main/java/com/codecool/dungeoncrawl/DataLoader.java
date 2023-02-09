@@ -47,6 +47,7 @@ public class DataLoader {
                     break;
             }
             actor.setHealth(actorModel.getHp());
+            actor.setDamage(actorModel.getDm());
             actors.add(actor);
         }
         System.out.println(actors);

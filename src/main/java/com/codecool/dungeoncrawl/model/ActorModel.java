@@ -8,21 +8,23 @@ public class ActorModel extends BaseModel{
     private int hp;
     private int x;
     private int y;
+    private int dm;
 
 
-    public ActorModel(String actorName, int x, int y, int hp) {
+    public ActorModel(String actorName, int x, int y, int hp, int dm) {
         this.actorName = actorName;
         this.x = x;
         this.y = y;
         this.hp = hp;
+        this.dm = dm;
     }
 
     public ActorModel(Actor actor) {
         this.actorName = actor.getTileName();
         this.x = actor.getX();
         this.y = actor.getY();
-
         this.hp = actor.getHealth();
+        this.dm = actor.getDamage();
 
     }
 
@@ -58,4 +60,7 @@ public class ActorModel extends BaseModel{
         this.y = y;
     }
 
+    public int getDm() {
+        return dm;
+    }
 }
