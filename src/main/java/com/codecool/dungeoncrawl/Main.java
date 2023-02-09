@@ -79,6 +79,19 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+////        TESTS for serializer
+        PlayerModel playerModelTest = setPlayerModel(map.getPlayer());
+        Date currentSQLTime = getCurrentSQLTime();
+//        String stringMap = getStringObjGson(map.getCell(7,1).getActor().getHealth());
+        String stringMap = "map2.txt";
+        GameState gameStateTest = setGameState(stringMap, currentSQLTime, playerModelTest);
+//        System.out.println("TEST: "+stringMap);
+        String testPlayer = getStringObjGson(gameStateTest);
+        System.out.println("Back: "+testPlayer);
+        GameState resultBack = getObjFromJSON_Gson(testPlayer);
+        System.out.println("result: "+resultBack.toString());
+        System.out.println("original: "+gameStateTest.toString());
+
         GridPane ui = new GridPane();
         ui.setPrefWidth(300);
         ui.setPadding(new Insets(10));
@@ -152,10 +165,30 @@ public class Main extends Application {
         Scene scene = new Scene(borderPane);
         scene.getRoot().setStyle("-fx-font-family: 'serif'");
         primaryStage.setScene(scene);
+        setInitialDxDy(); //added for loading game with player in some random position on the map
         refresh(deltaX, deltaY);
         scene.setOnKeyPressed(this::onKeyPressed);
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
+//        saveInDb();
+    }
+
+    //added for loading game with player in some random position on the map
+    private void setInitialDxDy(){
+        if (map.getPlayer().getX()<(map.getDisplayWidth()-1)/2) {
+            deltaX=0;
+        } else if (map.getPlayer().getX()>= (map.getMapWidth()- (map.getDisplayWidth()-1)/2)) {
+            deltaX=map.getMapWidth()- map.getDisplayWidth();
+        } else {
+            deltaX=map.getPlayer().getX()-(map.getDisplayWidth()-1)/2;
+        }
+        if (map.getPlayer().getY()<(map.getDisplayHeight()-1)/2) {
+            deltaY=0;
+        } else if (map.getPlayer().getY()>=(map.getMapHeight()-(map.getDisplayHeight()-1)/2)) {
+            deltaY=map.getMapHeight()- (map.getDisplayHeight()-1)/2;
+        } else {
+            deltaY=map.getPlayer().getY()-(map.getDisplayHeight()-1)/2;
+        }
     }
 
     private void showSaveDialogBox(){
@@ -369,35 +402,26 @@ public class Main extends Application {
     }
 
     //tests on row 82 !!!
-    public PlayerModel setPlayerModel (Player player)
-    {
+    public PlayerModel setPlayerModel (Player player) {
         return new PlayerModel(player);
     }
 
-    //get the current time in SQL format
     public Date getCurrentSQLTime () {
-//        Calendar calendar = Calendar.getInstance();
-//        return calendar.getTime();
         return Date.valueOf(LocalDate.now());
     }
 
-    public <K> String getStringObjJackson(K obj) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(obj);
-    }
 
     public <K> String getStringObjGson (K obj) {
         return new Gson().toJson(obj);
     }
 
-    public GameMap getObjFromJSON_Gson (String mapString) {
-        return new Gson().fromJson(mapString,GameMap.class);
+    public GameState getObjFromJSON_Gson (String mapString) {
+        return new Gson().fromJson(mapString,GameState.class);
     }
 
-    public String getObjFromJSON_Gson2 (String mapString) {
-        return new Gson().fromJson(mapString,String.class);
-    }
 
+    public GameState setGameState (String currentMap, Date currentDate, PlayerModel playerModel) {
+        return new GameState(currentMap, currentDate, playerModel);
     public GameStateModel setGameState (String currentMap, Date currentDate)
     {
         return new GameStateModel(currentMap, currentDate);
