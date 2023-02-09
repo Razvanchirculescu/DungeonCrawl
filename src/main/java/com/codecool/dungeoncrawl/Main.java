@@ -199,6 +199,7 @@ public class Main extends Application {
         Scene scene = new Scene(borderPane);
         scene.getRoot().setStyle("-fx-font-family: 'serif'");
         primaryStage.setScene(scene);
+        populateGameMap();
         setInitialDxDy(); //added for loading game with player in some random position on the map
         refresh(deltaX, deltaY);
         scene.setOnKeyPressed(this::onKeyPressed);

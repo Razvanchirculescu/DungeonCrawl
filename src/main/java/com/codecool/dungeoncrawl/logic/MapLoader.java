@@ -134,6 +134,9 @@ public class MapLoader {
             Cell cell = blankMap.getCell(actor.getX(), actor.getY());
             cell.setType(CellType.FLOOR);
             cell.setActor(actor);
+            if(actor.getTileName().equals("player")) {
+                blankMap.setPlayer((Player) actor);
+            }
         }
 
         for (Item item: items) {
