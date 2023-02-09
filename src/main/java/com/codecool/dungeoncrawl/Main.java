@@ -96,6 +96,7 @@ public class Main extends Application {
         System.out.println("Back: "+testPlayer);
         GameState resultBack = getObjFromJSON_Gson(testPlayer);
         System.out.println("result: "+resultBack.toString());
+        System.out.println("original: "+gameStateTest.toString());
 
         GridPane ui = new GridPane();
         ui.setPrefWidth(300);
@@ -172,11 +173,30 @@ public class Main extends Application {
         Scene scene = new Scene(borderPane);
         scene.getRoot().setStyle("-fx-font-family: 'serif'");
         primaryStage.setScene(scene);
+        setInitialDxDy(); //added for loading game with player in some random position on the map
         refresh(deltaX, deltaY);
         scene.setOnKeyPressed(this::onKeyPressed);
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
 //        saveInDb();
+    }
+
+    //added for loading game with player in some random position on the map
+    private void setInitialDxDy(){
+        if (map.getPlayer().getX()<(map.getDisplayWidth()-1)/2) {
+            deltaX=0;
+        } else if (map.getPlayer().getX()>= (map.getMapWidth()- (map.getDisplayWidth()-1)/2)) {
+            deltaX=map.getMapWidth()- map.getDisplayWidth();
+        } else {
+            deltaX=map.getPlayer().getX()-(map.getDisplayWidth()-1)/2;
+        }
+        if (map.getPlayer().getY()<(map.getDisplayHeight()-1)/2) {
+            deltaY=0;
+        } else if (map.getPlayer().getY()>=(map.getMapHeight()-(map.getDisplayHeight()-1)/2)) {
+            deltaY=map.getMapHeight()- (map.getDisplayHeight()-1)/2;
+        } else {
+            deltaY=map.getPlayer().getY()-(map.getDisplayHeight()-1)/2;
+        }
     }
 
     private void showSaveDialogBox(){
