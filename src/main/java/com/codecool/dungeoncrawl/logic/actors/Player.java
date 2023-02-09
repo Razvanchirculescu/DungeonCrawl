@@ -16,6 +16,8 @@ public class Player extends Actor {
     Music inventoryPickUpItem;
     Music openDoor;
     String name;
+    int x;
+    int y;
     String playerName = "name";
 
     public Player(Cell cell) {
@@ -23,6 +25,13 @@ public class Player extends Actor {
         super(cell);
         this.setHealth(66);
         this.setDamage(5);
+    }
+
+    public Player(String name, int hp, int x, int y) {
+        this.name = name;
+        this.setHealth(hp);
+        this.x = x;
+        this.y = y;
     }
 
     public String getTileName() {
