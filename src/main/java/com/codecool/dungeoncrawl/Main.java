@@ -190,8 +190,6 @@ public class Main extends Application {
         System.out.println(name);
         getPlayerNameLabel();
 
-
-
         Scene scene = new Scene(borderPane);
         scene.getRoot().setStyle("-fx-font-family: 'serif'");
         primaryStage.setScene(scene);
@@ -200,15 +198,15 @@ public class Main extends Application {
         scene.setOnKeyPressed(this::onKeyPressed);
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
+        setupDbManager();
+        DataLoader dataLoader = new DataLoader(dbManager, map);
+        dataLoader.getAllActors();
+        dataLoader.getAllItems();
     }
 
     public String getPlayerNameLabel() {
         resultPlayerNameLabel = playerNameLabel.getText();
         return resultPlayerNameLabel;
-        setupDbManager();
-        DataLoader dataLoader = new DataLoader(dbManager, map);
-        dataLoader.getAllActors();
-        dataLoader.getAllItems();
     }
 
     //added for loading game with player in some random position on the map
