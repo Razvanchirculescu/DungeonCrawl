@@ -5,14 +5,8 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.*;
-import com.codecool.dungeoncrawl.logic.items.BluePotion;
-import com.codecool.dungeoncrawl.logic.items.Item;
 import com.codecool.dungeoncrawl.logic.items.Key;
-import com.codecool.dungeoncrawl.logic.levels.OpenDoor;
-import com.codecool.dungeoncrawl.logic.levels.YellowDoor;
-import com.codecool.dungeoncrawl.model.ActorModel;
 import com.codecool.dungeoncrawl.model.GameStateModel;
-import com.codecool.dungeoncrawl.model.ItemModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.codecool.dungeoncrawl.util.Music;
 import com.codecool.dungeoncrawl.logic.items.Sword;
@@ -30,10 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -46,7 +37,8 @@ public class Main extends Application {
     Music inventoryPickUpSoundEffect;
     Music footstepsSoundEffect;
     Music attackSoundEffect;
-    GameMap map = MapLoader.loadMap();
+    String userName = getUserName();
+    GameMap map = getGameMap(userName);
     Canvas canvas = new Canvas(
             map.getDisplayWidth() * Tiles.TILE_WIDTH,
             map.getDisplayHeight() * Tiles.TILE_WIDTH);
@@ -71,6 +63,26 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public GameMap getGameMap(String name) {
+        setupDbManager();
+        List<String> names = dbManager.getAllNames();
+        if(names.contains(name)) {
+            return MapLoader.loadBlankMap(name);
+        } else {
+            return MapLoader.loadMap();
+        }
+    }
+
+    public String getUserName() {
+        TextInputDialog nameInputDialogBox = new TextInputDialog("Name goes here");
+//        nameInputDialogBox.contentTextProperty().set("-fx-font-family: 'serif'");
+        nameInputDialogBox.setTitle("NameBox");
+        nameInputDialogBox.setHeaderText("Please enter your name below");
+        Optional<String> result = nameInputDialogBox.showAndWait();
+        String name = result.get();
+        return name;
     }
 
     public void loadSounds() {
@@ -178,16 +190,8 @@ public class Main extends Application {
 //                .getResource("src/main/resources/style.css").toString());
 //        StyleManager.getInstance().addUserAgentStylesheet(getResource("src/main/resources/style.css").toString());
 //        StyleManager.getInstance().addUserAgentStylesheet("-fx-font-family: 'serif'");
-
-
-        TextInputDialog nameInputDialogBox = new TextInputDialog("Name goes here");
-//        nameInputDialogBox.contentTextProperty().set("-fx-font-family: 'serif'");
-        nameInputDialogBox.setTitle("NameBox");
-        nameInputDialogBox.setHeaderText("Please enter your name below");
-        Optional<String> result = nameInputDialogBox.showAndWait();
-        String name = result.get();
-        playerNameLabel.setText(name);
-        System.out.println(name);
+        playerNameLabel.setText(userName);
+        System.out.println(userName);
         getPlayerNameLabel();
 
         Scene scene = new Scene(borderPane);
@@ -198,7 +202,6 @@ public class Main extends Application {
         scene.setOnKeyPressed(this::onKeyPressed);
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
-        setupDbManager();
         DataLoader dataLoader = new DataLoader(dbManager, map);
         dataLoader.getAllActors();
         dataLoader.getAllItems();

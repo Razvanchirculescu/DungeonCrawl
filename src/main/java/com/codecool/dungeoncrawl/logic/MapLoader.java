@@ -5,8 +5,6 @@ import com.codecool.dungeoncrawl.logic.items.*;
 import com.codecool.dungeoncrawl.logic.levels.YellowDoor;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class MapLoader {

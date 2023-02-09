@@ -63,7 +63,7 @@ public class ItemDaoJdbc implements ItemDao{
             System.out.println(result);
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException("Error while reading all actors", e);
+            throw new RuntimeException("Error while reading all items", e);
         }
     }
 }
