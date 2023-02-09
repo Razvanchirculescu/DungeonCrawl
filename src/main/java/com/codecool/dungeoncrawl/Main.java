@@ -72,7 +72,9 @@ public class Main extends Application {
         setupDbManager();
         List<String> names = dbManager.getAllNames();
         if(names.contains(name)) {
-            return MapLoader.loadBlankMap("/emptymap2.txt");
+            GameMap map1 =MapLoader.loadBlankMap("/emptymap2.txt");
+            populateGameMap(map1);
+            return map1;
         } else {
             return MapLoader.loadMap();
         }
@@ -199,7 +201,7 @@ public class Main extends Application {
         Scene scene = new Scene(borderPane);
         scene.getRoot().setStyle("-fx-font-family: 'serif'");
         primaryStage.setScene(scene);
-        populateGameMap();
+
         setInitialDxDy(); //added for loading game with player in some random position on the map
         refresh(deltaX, deltaY);
         scene.setOnKeyPressed(this::onKeyPressed);
@@ -208,11 +210,11 @@ public class Main extends Application {
 
     }
 
-    public GameMap populateGameMap() {
+    public GameMap populateGameMap(GameMap map1) {
         DataLoader dataLoader = new DataLoader(dbManager, map);
         List<Actor> actors = dataLoader.getAllActors();
         List<Item> items = dataLoader.getAllItems();
-        GameMap savedMap = populateBlankMap(map, actors, items);
+        GameMap savedMap = populateBlankMap(map1, actors, items);
         return savedMap;
     }
 
