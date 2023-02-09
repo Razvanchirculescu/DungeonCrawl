@@ -6,6 +6,7 @@ public class CreepyBug extends Actor {
 
     public CreepyBug(Cell cell) {
         super(cell);
+        this.name = "CrepyBug";
         this.setHealth(20);
         this.setDamage(5);
     }

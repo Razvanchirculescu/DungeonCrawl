@@ -46,8 +46,6 @@ public class GameStateDaoJdbc implements GameStateDao {
             if (!rs.next()) {
                 return null;
             }
-            int myId = rs.getInt(1);
-            System.out.println(myId);
             return rs.getObject(1);
         } catch (SQLException e) {
             throw new RuntimeException("Does not exist: " + name, e);

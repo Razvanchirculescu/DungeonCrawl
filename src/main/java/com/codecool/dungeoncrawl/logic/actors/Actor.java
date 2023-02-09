@@ -12,6 +12,7 @@ public abstract class Actor implements Drawable {
     private Cell cell;
     private int damage;
     private int health = 10;
+    String name;
 
     public Actor(Cell cell) {
         this.cell = cell;
@@ -86,5 +87,9 @@ public abstract class Actor implements Drawable {
 
     protected void setItemsNull() {
         this.getItems().clear();
+    }
+
+    public String getName() {
+        return name;
     }
 }

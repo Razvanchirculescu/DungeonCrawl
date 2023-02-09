@@ -1,29 +1,34 @@
 package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.*;
-import com.codecool.dungeoncrawl.logic.items.BluePotion;
-import com.codecool.dungeoncrawl.logic.items.CasperCross;
-import com.codecool.dungeoncrawl.logic.items.Key;
-import com.codecool.dungeoncrawl.logic.items.Sword;
+import com.codecool.dungeoncrawl.logic.items.*;
 import com.codecool.dungeoncrawl.logic.levels.YellowDoor;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class MapLoader {
     public static GameMap loadMap() {
-        InputStream is = MapLoader.class.getResourceAsStream("/map2.txt");
-        //InputStream is = MapLoader.class.getResourceAsStream("/map.txt");
+        String path = "/map2.txt";
+//        String path = "/map.txt";
+        InputStream is = MapLoader.class.getResourceAsStream(path);
+        if (is == null) {
+            System.out.println("No valid path to file!");
+            throw new RuntimeException("No valid path to file!");
+        }
         Scanner scanner = new Scanner(is);
         int mapWidth = scanner.nextInt();
         int mapHeight = scanner.nextInt();
 
 
         int displayWidth = 25;
-        int diplayHeight = 20;
+        int displayHeight = 20;
 
         scanner.nextLine(); // empty line
 
-        GameMap map = new GameMap(mapWidth, mapHeight, displayWidth, diplayHeight, CellType.EMPTY);
+        GameMap map = new GameMap(mapWidth, mapHeight, displayWidth, displayHeight, CellType.EMPTY);
 
         for (int y = 0; y < mapHeight; y++) {
             String line = scanner.nextLine();
@@ -83,6 +88,63 @@ public class MapLoader {
             }
         }
         return map;
+    }
+
+    public static GameMap loadBlankMap(String mapPath) {
+        InputStream is = MapLoader.class.getResourceAsStream(mapPath);
+        if (is == null) {
+            System.out.println("No valid path to file!");
+            throw new RuntimeException("No valid path to file!");
+        }
+        Scanner scanner = new Scanner(is);
+        int mapWidth = scanner.nextInt();
+        int mapHeight = scanner.nextInt();
+
+        int displayWidth = 25;
+        int displayHeight = 20;
+
+        scanner.nextLine(); // empty line
+
+        GameMap map = new GameMap(mapWidth, mapHeight, displayWidth, displayHeight, CellType.EMPTY);
+
+        for (int y = 0; y < mapHeight; y++) {
+            String line = scanner.nextLine();
+            for (int x = 0; x < mapWidth; x++) {
+                if (x < line.length()) {
+                    Cell cell = map.getCell(x, y);
+                    switch (line.charAt(x)) {
+                        case ' ':
+                            cell.setType(CellType.EMPTY);
+                            break;
+                        case '#':
+                            cell.setType(CellType.WALL);
+                            break;
+                        case '.':
+                            cell.setType(CellType.FLOOR);
+                            break;
+                        default:
+                            throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");
+                    }
+                }
+            }
+        }
+        return map;
+    }
+
+    public static GameMap populateBlankMap(GameMap blankMap, List<Actor> actors, List<Item> items) {
+        for (Actor actor: actors) {
+            Cell cell = blankMap.getCell(actor.getX(), actor.getY());
+            cell.setType(CellType.FLOOR);
+            cell.setActor(actor);
+        }
+
+        for (Item item: items) {
+            Cell cell = blankMap.getCell(item.getX(), item.getY());
+            cell.setType(CellType.FLOOR);
+            cell.setItem(item);
+  
+        }
+        return blankMap;
     }
 
 }

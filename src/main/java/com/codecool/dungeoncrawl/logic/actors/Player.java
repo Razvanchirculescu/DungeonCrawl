@@ -15,14 +15,14 @@ public class Player extends Actor {
     Music attackSoundEffect;
     Music inventoryPickUpItem;
     Music openDoor;
-    String name;
+//    String name;
     int x;
     int y;
     String playerName = "name";
 
     public Player(Cell cell) {
-
         super(cell);
+        this.name = "Player";
         this.setHealth(66);
         this.setDamage(5);
     }

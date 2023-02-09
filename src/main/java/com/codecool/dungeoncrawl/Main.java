@@ -30,7 +30,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -56,6 +59,10 @@ public class Main extends Application {
     Label damageLabel = new Label();
     Label playerNameLabel = new Label();
     GameDatabaseManager dbManager;
+
+    String resultPlayerNameLabel;
+
+
     int deltaX =0;
     int deltaY =0;
 
@@ -128,6 +135,21 @@ public class Main extends Application {
         ui.add(quitButton, 0, 20);
         quitButton.setOnAction(actionEvent -> System.exit(0));
 
+        Button muteButton = new Button();
+        muteButton.setText("Mute audio");
+        muteButton.setFocusTraversable(false);
+        ui.add(muteButton, 0, 22);
+        muteButton.setOnAction(actionEvent -> {
+            if (muteButton.getText().equals("Mute audio")) {
+                gameplayMusic.stop();
+                muteButton.setText("Unmute audio");
+            }else {
+                 muteButton.setText("Unmute audio");
+                 gameplayMusic.play();
+                 muteButton.setText("Mute audio");
+            }
+        });
+
         Button loadButton = new Button();
         loadButton.setText("Load Saved Game");
         loadButton.setFocusTraversable(false);
@@ -139,6 +161,8 @@ public class Main extends Application {
             savedGamesList.add("Save3");
             savedGamesList.add("Save4");
             ChoiceDialog<String> loadGameDialog = new ChoiceDialog<>("Save1", savedGamesList);
+            Button loadDialogButton = (Button) loadGameDialog.getDialogPane().lookupButton(ButtonType.OK);
+            loadDialogButton.setText("Load");
             loadGameDialog.setTitle("Load Game");
             loadGameDialog.setHeaderText("");
             loadGameDialog.setContentText("Choose a save to load");
@@ -146,7 +170,6 @@ public class Main extends Application {
            // if(result.isPresent()){
                 //load saved game
            // }
-
         });
 
 
@@ -164,6 +187,10 @@ public class Main extends Application {
         Optional<String> result = nameInputDialogBox.showAndWait();
         String name = result.get();
         playerNameLabel.setText(name);
+        System.out.println(name);
+        getPlayerNameLabel();
+
+
 
         Scene scene = new Scene(borderPane);
         scene.getRoot().setStyle("-fx-font-family: 'serif'");
@@ -173,6 +200,11 @@ public class Main extends Application {
         scene.setOnKeyPressed(this::onKeyPressed);
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
+    }
+
+    public String getPlayerNameLabel() {
+        resultPlayerNameLabel = playerNameLabel.getText();
+        return resultPlayerNameLabel;
         setupDbManager();
         DataLoader dataLoader = new DataLoader(dbManager, map);
         dataLoader.getAllActors();
@@ -380,7 +412,7 @@ public class Main extends Application {
         }
     }
 
-    //tests on row 82 !!!
+    //tests on row 88 !!!
     public PlayerModel setPlayerModel (Player player) {
         return new PlayerModel(player);
     }
