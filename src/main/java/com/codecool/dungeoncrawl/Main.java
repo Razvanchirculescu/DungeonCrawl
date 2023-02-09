@@ -212,8 +212,8 @@ public class Main extends Application {
 
     public GameMap populateGameMap(GameMap map1) {
         DataLoader dataLoader = new DataLoader(dbManager, map);
-        List<Actor> actors = dataLoader.getAllActors();
-        List<Item> items = dataLoader.getAllItems();
+        List<Actor> actors = dataLoader.getAllActors(userName);
+        List<Item> items = dataLoader.getAllItems(userName);
         GameMap savedMap = populateBlankMap(map1, actors, items);
         return savedMap;
     }

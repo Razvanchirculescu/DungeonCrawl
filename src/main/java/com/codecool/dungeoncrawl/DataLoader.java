@@ -25,8 +25,8 @@ public class DataLoader {
         this.map = map;
     }
 
-    public List<Actor> getAllActors(){
-        List<ActorModel> actorModels = dbManager.listAllActors("oop");
+    public List<Actor> getAllActors(String name){
+        List<ActorModel> actorModels = dbManager.listAllActors(name);
         List<Actor> actors = new ArrayList<>();
         for(ActorModel actorModel: actorModels) {
             Cell cell = map.getCell(actorModel.getX(), actorModel.getY());
@@ -52,8 +52,8 @@ public class DataLoader {
         return actors;
     }
 
-    public List<Item> getAllItems(){
-        List<ItemModel> itemModels = dbManager.listAllItem("oop");
+    public List<Item> getAllItems(String name){
+        List<ItemModel> itemModels = dbManager.listAllItem(name);
         List<Item> items = new ArrayList<>();
         for(ItemModel itemModel: itemModels) {
             Cell cell = map.getCell(itemModel.getX(), itemModel.getY());
