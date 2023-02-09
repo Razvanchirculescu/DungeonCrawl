@@ -37,3 +37,6 @@ VALUES ('map', 'Angi');
 
 ALTER TABLE ONLY public.actor
     ADD CONSTRAINT fk_game_state_id FOREIGN KEY (game_state_id) REFERENCES public.game_state(id);
+
+ALTER TABLE ONLY public.item
+    ADD CONSTRAINT fk_game_state_id FOREIGN KEY (game_state_id) REFERENCES public.game_state(id);

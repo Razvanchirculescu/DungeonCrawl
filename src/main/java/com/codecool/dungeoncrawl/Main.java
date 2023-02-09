@@ -8,7 +8,7 @@ import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.Casper;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.items.Key;
-import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.codecool.dungeoncrawl.util.Music;
 import com.codecool.dungeoncrawl.logic.items.Sword;
@@ -27,7 +27,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
-
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
@@ -39,12 +38,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class Main extends Application {
-
     Music gameplayMusic;
     Music inventoryPickUpSoundEffect;
     Music footstepsSoundEffect;
     Music attackSoundEffect;
-
     GameMap map = MapLoader.loadMap();
     Canvas canvas = new Canvas(
             map.getDisplayWidth() * Tiles.TILE_WIDTH,
@@ -58,8 +55,6 @@ public class Main extends Application {
     Label damageLabel = new Label();
     Label playerNameLabel = new Label();
     GameDatabaseManager dbManager;
-
-
     int deltaX =0;
     int deltaY =0;
 
@@ -147,11 +142,9 @@ public class Main extends Application {
             loadGameDialog.setHeaderText("");
             loadGameDialog.setContentText("Choose a save to load");
             Optional<String> result = loadGameDialog.showAndWait();
-            if(result.isPresent()){
+           // if(result.isPresent()){
                 //load saved game
-            }
-
-
+           // }
         });
 
 
@@ -208,12 +201,25 @@ public class Main extends Application {
         saveButton.setText("Save and continue");
         Optional<String> result = saveDialogBox.showAndWait();
         if (result.isPresent()){
-            saveInDb();
+    //        private void saveInDb() {
+            setupDbManager();
+            dbManager.saveGameState(result.get());
+            for (int x = 0; x < map.getMapWidth(); x++) {
+                for (int y = 0; y < map.getMapHeight(); y++) {
+                    if (!Objects.equals(map.getCell(x, y).getActor(), null)) {
+                        dbManager.savePlayer(map.getCell(x, y).getActor());
+                    } else if (!Objects.equals(map.getCell(x, y).getItem(), null)) {
+                        dbManager.saveItems(map.getCell(x, y).getItem());
+                    }
+                }
+            }
+            }
+  //          saveInDb();
             System.out.println("Progress saved in the database!");
         }
 
 
-    }
+
 
     private void onKeyPressed(KeyEvent keyEvent) {
         if (keyEvent.isControlDown()&& keyEvent.getCode()==KeyCode.S){
@@ -342,18 +348,6 @@ public class Main extends Application {
         }
     }
 
-    private void saveInDb() {
-        setupDbManager();
-        for (int x = 0; x < map.getMapWidth(); x++) {
-            for (int y = 0; y < map.getMapHeight(); y++) {
-                if (!Objects.equals(map.getCell(x, y).getActor(), null)) {
-                    dbManager.savePlayer(map.getCell(x, y).getActor());
-                } else if (!Objects.equals(map.getCell(x, y).getItem(), null)) {
-                    dbManager.saveItems(map.getCell(x, y).getItem());
-                }
-            }
-        }
-    }
 
     public void checkGameOver() {
         Dialog gameOverDialog = null;
@@ -427,11 +421,10 @@ public class Main extends Application {
     }
 
 
-    public GameState setGameState (String currentMap, Date currentDate, PlayerModel playerModel) {
-        return new GameState(currentMap, currentDate, playerModel);
+    public GameStateModel setGameState (String currentMap, Date currentDate)
+    {
+        return new GameStateModel(currentMap, currentDate);
     }
-
-
 
 
 }

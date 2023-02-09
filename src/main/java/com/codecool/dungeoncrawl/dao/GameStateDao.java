@@ -1,12 +1,9 @@
 package com.codecool.dungeoncrawl.dao;
 
-import com.codecool.dungeoncrawl.model.GameState;
-
-import java.util.List;
+import com.codecool.dungeoncrawl.model.GameStateModel;
 
 public interface GameStateDao {
-    void add(GameState state);
-    void update(GameState state, String saveName);
-    GameState get(int id);
-    List<GameState> getAll();
+    void add(GameStateModel state);
+    void update(GameStateModel state, String saveName);
+    GameStateModel get(int id);
 }

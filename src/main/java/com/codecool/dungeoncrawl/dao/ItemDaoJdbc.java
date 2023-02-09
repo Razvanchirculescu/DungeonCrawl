@@ -1,9 +1,10 @@
 package com.codecool.dungeoncrawl.dao;
 
+import com.codecool.dungeoncrawl.model.ActorModel;
 import com.codecool.dungeoncrawl.model.ItemModel;
-
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemDaoJdbc implements ItemDao{
@@ -34,16 +35,33 @@ public class ItemDaoJdbc implements ItemDao{
 
     @Override
     public void update(ItemModel item) {
-
-    }
-
-    @Override
-    public ItemModel get(int id) {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "UPDATE item SET item_name = ?, x = ?, y = ? WHERE game_state_id = ?";
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setString(1, item.getItemName());
+            st.setInt(2, item.getX());
+            st.setInt(3, item.getY());
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public List<ItemModel> getAll() {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT id, item_name, x, y FROM item";
+            ResultSet rs = conn.createStatement().executeQuery(sql);
+            List<ItemModel> result = new ArrayList<>();
+            while (rs.next()) { // while result set pointer is positioned before or on last row read authors
+                ItemModel item = new ItemModel(rs.getString(2), rs.getInt(3),
+                        rs.getInt(4));
+                item.setId(rs.getInt(1));
+                result.add(item);
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while reading all items", e);
+        }
     }
 }
