@@ -20,6 +20,7 @@ public class DataLoader {
 
     GameDatabaseManager dbManager;
     GameMap map;
+
     public DataLoader(GameDatabaseManager dbManager, GameMap map) {
         this.dbManager = dbManager;
         this.map = map;
