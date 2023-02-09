@@ -19,11 +19,11 @@ public class MapLoader {
 
 
         int displayWidth = 25;
-        int diplayHeight = 20;
+        int displayHeight = 20;
 
         scanner.nextLine(); // empty line
 
-        GameMap map = new GameMap(mapWidth, mapHeight, displayWidth, diplayHeight, CellType.EMPTY);
+        GameMap map = new GameMap(mapWidth, mapHeight, displayWidth, displayHeight, CellType.EMPTY);
 
         for (int y = 0; y < mapHeight; y++) {
             String line = scanner.nextLine();
