@@ -73,7 +73,7 @@ public class Main extends Application {
         List<String> names = dbManager.getAllNames();
         if(names.contains(name)) {
             GameMap map1 =MapLoader.loadBlankMap("/emptymap2.txt");
-            populateGameMap(map1);
+            map1 = populateGameMap(map1);
             return map1;
         } else {
             return MapLoader.loadMap();
