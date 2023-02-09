@@ -27,7 +27,8 @@ public class Player extends Actor {
         this.setDamage(5);
     }
 
-    public Player(String name, int hp, int x, int y) {
+    public Player(String name, int hp, int x, int y, Cell cell) {
+        super(cell);//??
         this.name = name;
         this.setHealth(hp);
         this.x = x;
