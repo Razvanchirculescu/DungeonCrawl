@@ -27,12 +27,12 @@ public class Player extends Actor {
         this.setDamage(5);
     }
 
-    public Player(String name, int hp, int x, int y) {
-        this.name = name;
-        this.setHealth(hp);
-        this.x = x;
-        this.y = y;
-    }
+//    public Player(String name, int hp, int x, int y) {
+//        this.name = name;
+//        this.setHealth(hp);
+//        this.x = x;
+//        this.y = y;
+//    }
 
     public String getTileName() {
         return "player";

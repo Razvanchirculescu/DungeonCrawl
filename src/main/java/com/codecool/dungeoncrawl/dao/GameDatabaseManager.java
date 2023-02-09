@@ -11,6 +11,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.util.List;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 import javax.sql.DataSource;
@@ -46,6 +47,10 @@ public class GameDatabaseManager {
     public void saveGameState(String map, String name) {
         GameStateModel model = new GameStateModel(map, name, new Date(System.currentTimeMillis()));
         gameStateDao.add(model);
+    }
+
+    public List<ActorModel> listAllActors(String name) {
+        return  actorDao.getAll(getGameStateId(name));
     }
 
     private DataSource connect() throws SQLException, FileNotFoundException {

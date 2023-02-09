@@ -58,7 +58,9 @@ public class ActorDaoJdbc implements ActorDao {
                 ActorModel actor = new ActorModel(rs.getString(2), rs.getInt(3),
                 rs.getInt(4), rs.getInt(5));
                 result.add(actor);
+
             }
+            System.out.println(result);
             return result;
         } catch (SQLException e) {
             throw new RuntimeException("Error while reading all actors", e);

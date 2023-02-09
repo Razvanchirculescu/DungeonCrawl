@@ -4,10 +4,9 @@ import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
-import com.codecool.dungeoncrawl.logic.actors.Actor;
-import com.codecool.dungeoncrawl.logic.actors.Casper;
-import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.actors.*;
 import com.codecool.dungeoncrawl.logic.items.Key;
+import com.codecool.dungeoncrawl.model.ActorModel;
 import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.codecool.dungeoncrawl.util.Music;
@@ -142,6 +141,7 @@ public class Main extends Application {
            // if(result.isPresent()){
                 //load saved game
            // }
+
         });
 
 
@@ -169,6 +169,8 @@ public class Main extends Application {
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
 //        saveInDb();
+        setupDbManager();
+        getAllActors();
     }
 
     //added for loading game with player in some random position on the map
@@ -200,7 +202,7 @@ public class Main extends Application {
         if (result.isPresent()){
             String name = result.get();
     //        private void saveInDb() {
-            setupDbManager();
+
             dbManager.saveGameState("/emptymap2.txt",name);
             int gameStateId = dbManager.getGameStateId(name);
             for (int x = 0; x < map.getMapWidth(); x++) {
@@ -416,6 +418,28 @@ public class Main extends Application {
 
     public GameStateModel getObjFromJSON_Gson (String mapString) {
         return new Gson().fromJson(mapString, GameStateModel.class);
+    }
+
+    public List<Actor> getAllActors(){
+        List<ActorModel> actorModels = dbManager.listAllActors("oop");
+        List<Actor> actors = new ArrayList<>();
+        for(ActorModel actorModel: actorModels) {
+            Cell cell = map.getCell(actorModel.getX(), actorModel.getY());
+            Actor actor;
+            if(actorModel.getActorName().equals("player")) {
+                actor = new Player(cell);
+            } else if (actorModel.getActorName().equals("casper")) {
+                actor = new Casper(cell);
+            } else if (actorModel.getActorName().equals("creepyBug")) {
+                actor = new CreepyBug(cell);
+            } else {
+                actor = new Skeleton(cell);
+            }
+            actor.setHealth(actorModel.getHp());
+            actors.add(actor);
+        }
+        System.out.println(actors);
+        return actors;
     }
 
 }
