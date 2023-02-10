@@ -60,7 +60,7 @@ public class ItemDaoJdbc implements ItemDao{
                         rs.getInt(4));
                 result.add(itemModel);
             }
-            System.out.println(result);
+            System.out.println("result: "+result);
             return result;
         } catch (SQLException e) {
             throw new RuntimeException("Error while reading all items", e);

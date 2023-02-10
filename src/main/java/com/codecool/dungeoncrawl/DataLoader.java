@@ -79,7 +79,7 @@ public class DataLoader {
             }
             items.add(item);
         }
-        System.out.println(items);
+        System.out.println("Items: "+items);
         return items;
     }
 }
