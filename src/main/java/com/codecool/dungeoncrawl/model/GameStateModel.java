@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
 
-public class GameState extends BaseModel {
+public class GameStateModel extends BaseModel {
     private Date savedAt;
     private String currentMap;
     private List<String> discoveredMaps = new ArrayList<>();
-    private PlayerModel player;
+    private String savedName;
+    PlayerModel playerModel;
 
-    public GameState(String currentMap, Date savedAt, PlayerModel player) {
-        this.currentMap = currentMap;
+    public GameStateModel(String currentMap, String savedName, Date savedAt) {
+        this.savedName = savedName;
         this.savedAt = savedAt;
-        this.player = player;
+        this.currentMap = currentMap;
     }
 
     public Date getSavedAt() {
@@ -40,11 +41,11 @@ public class GameState extends BaseModel {
         this.discoveredMaps.add(map);
     }
 
-    public PlayerModel getPlayer() {
-        return player;
+    public String getSavedName() {
+        return savedName;
     }
 
-    public void setPlayer(PlayerModel player) {
-        this.player = player;
+    public void setSavedName(String savedName) {
+        this.savedName = savedName;
     }
 }

@@ -6,6 +6,7 @@ public class Skeleton extends Actor {
     public Skeleton(Cell cell) {
 
         super(cell);
+        this.name = "Skeleton";
         this.setHealth(10);
         this.setDamage(2);
     }

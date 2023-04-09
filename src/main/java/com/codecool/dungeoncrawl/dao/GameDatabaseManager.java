@@ -1,30 +1,69 @@
 package com.codecool.dungeoncrawl.dao;
 
-import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.items.Item;
+import com.codecool.dungeoncrawl.model.ActorModel;
+import com.codecool.dungeoncrawl.model.GameStateModel;
+import com.codecool.dungeoncrawl.model.ItemModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import org.postgresql.ds.PGSimpleDataSource;
 
 
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.util.List;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
+import java.sql.*;
 
 
 
 public class GameDatabaseManager {
-    private PlayerDao playerDao;
+    private ActorDaoJdbc actorDao;
+    private ItemDaoJdbc itemDao;
+    private ActorModel actorModel;
+    private GameStateDao gameStateDao;
+
+
 
     public void setup() throws SQLException, FileNotFoundException {
         DataSource dataSource = connect();
-        playerDao = new PlayerDaoJdbc(dataSource);
+        actorDao = new ActorDaoJdbc(dataSource);
+        itemDao = new ItemDaoJdbc(dataSource);
+        gameStateDao = new GameStateDaoJdbc(dataSource);
     }
 
-    public void savePlayer(Player player) {
-        PlayerModel model = new PlayerModel(player);
-        playerDao.add(model);
+    public void savePlayer(Actor player, int gameStateId) {
+        ActorModel model = new ActorModel(player);
+        actorDao.add(model, gameStateId);
+    }
+
+    public void updateGameStateDetails(Actor actor, int gameStateId) {
+        ActorModel model = new ActorModel(actor);
+        actorDao.update(model, gameStateId);
+    }
+
+    public void saveItems(Item item, int gameStateId) {
+        ItemModel model = new ItemModel(item);
+        itemDao.add(model, gameStateId);
+    }
+
+    public void saveGameState(String map, String name) {
+        GameStateModel model = new GameStateModel(map, name, new Date(System.currentTimeMillis()));
+        gameStateDao.add(model);
+    }
+
+    public List<ActorModel> listAllActors(String name) {
+        return  actorDao.getAll(getGameStateId(name));
+    }
+
+    public List<ItemModel> listAllItem(String name) {
+        return  itemDao.getAll(getGameStateId(name));
+    }
+
+    public List<String> getAllNames() {
+        return gameStateDao.getAllNames();
     }
 
     private DataSource connect() throws SQLException, FileNotFoundException {
@@ -69,5 +108,10 @@ public class GameDatabaseManager {
         System.out.println("Connection ok.");
 
         return dataSource;
+    }
+
+
+    public int getGameStateId(String name) {
+        return (int) gameStateDao.getId(name);
     }
 }

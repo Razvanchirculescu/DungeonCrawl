@@ -13,6 +13,7 @@ public class Casper extends Actor {
 
     public Casper(Cell cell) {
         super(cell);
+        this.name = "Casper";
         this.setHealth(10);
         this.setDamage(10);
         this.setCross();
