@@ -30,12 +30,12 @@ public class GameMap {
         return cells[x][y];
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
     public Player getPlayer() {
         return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     public int getMapWidth() {

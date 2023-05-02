@@ -1,15 +1,15 @@
 package com.codecool.dungeoncrawl.model;
 
-import java.util.ArrayList;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameStateModel extends BaseModel {
+    PlayerModel playerModel;
     private Date savedAt;
     private String currentMap;
     private List<String> discoveredMaps = new ArrayList<>();
     private String savedName;
-    PlayerModel playerModel;
 
     public GameStateModel(String currentMap, String savedName, Date savedAt) {
         this.savedName = savedName;

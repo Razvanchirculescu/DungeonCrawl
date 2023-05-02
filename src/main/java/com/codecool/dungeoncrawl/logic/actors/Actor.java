@@ -4,15 +4,16 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.Drawable;
 import com.codecool.dungeoncrawl.logic.items.Item;
 import com.codecool.dungeoncrawl.logic.levels.YellowDoor;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
 public abstract class Actor implements Drawable {
     private final ArrayList<Item> items = new ArrayList<>();
+    String name;
     private Cell cell;
     private int damage;
     private int health = 10;
-    String name;
 
     public Actor(Cell cell) {
         this.cell = cell;
@@ -44,9 +45,10 @@ public abstract class Actor implements Drawable {
 
     public boolean validMove(int dx, int dy) {
         Cell nextCell = cell.getNeighbor(dx, dy);
-        if(nextCell.getActor() == null) {
+        if (nextCell.getActor() == null) {
             return !(nextCell.getItem() instanceof YellowDoor) && !nextCell.getType().getTileName().equals("wall");
-        } return false;
+        }
+        return false;
     }
 
     public int getHealth() {

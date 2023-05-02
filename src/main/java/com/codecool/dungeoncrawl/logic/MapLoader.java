@@ -1,8 +1,17 @@
 package com.codecool.dungeoncrawl.logic;
 
-import com.codecool.dungeoncrawl.logic.actors.*;
-import com.codecool.dungeoncrawl.logic.items.*;
+import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.actors.Casper;
+import com.codecool.dungeoncrawl.logic.actors.CreepyBug;
+import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.actors.Skeleton;
+import com.codecool.dungeoncrawl.logic.items.BluePotion;
+import com.codecool.dungeoncrawl.logic.items.CasperCross;
+import com.codecool.dungeoncrawl.logic.items.Item;
+import com.codecool.dungeoncrawl.logic.items.Key;
+import com.codecool.dungeoncrawl.logic.items.Sword;
 import com.codecool.dungeoncrawl.logic.levels.YellowDoor;
+
 import java.io.InputStream;
 import java.util.List;
 import java.util.Scanner;
@@ -130,20 +139,20 @@ public class MapLoader {
     }
 
     public static GameMap populateBlankMap(GameMap blankMap, List<Actor> actors, List<Item> items) {
-        for (Actor actor: actors) {
+        for (Actor actor : actors) {
             Cell cell = blankMap.getCell(actor.getX(), actor.getY());
             cell.setType(CellType.FLOOR);
             cell.setActor(actor);
-            if(actor.getTileName().equals("player")) {
+            if (actor.getTileName().equals("player")) {
                 blankMap.setPlayer((Player) actor);
             }
         }
 
-        for (Item item: items) {
+        for (Item item : items) {
             Cell cell = blankMap.getCell(item.getX(), item.getY());
             cell.setType(CellType.FLOOR);
             cell.setItem(item);
-  
+
         }
         return blankMap;
     }

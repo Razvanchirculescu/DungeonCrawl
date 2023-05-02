@@ -29,12 +29,12 @@ public class Cell implements Drawable {
         this.type = type;
     }
 
-    public void setActor(Actor actor) {
-        this.actor = actor;
-    }
-
     public Actor getActor() {
         return actor;
+    }
+
+    public void setActor(Actor actor) {
+        this.actor = actor;
     }
 
     public Cell getNeighbor(int dx, int dy) {
@@ -54,10 +54,11 @@ public class Cell implements Drawable {
         return y;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
-    }
     public Item getItem() {
         return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
     }
 }

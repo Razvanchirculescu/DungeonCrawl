@@ -1,13 +1,17 @@
 package com.codecool.dungeoncrawl.dao;
 
-import com.codecool.dungeoncrawl.model.ActorModel;
 import com.codecool.dungeoncrawl.model.ItemModel;
+
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemDaoJdbc implements ItemDao{
+public class ItemDaoJdbc implements ItemDao {
 
     private DataSource dataSource;
 
@@ -60,7 +64,7 @@ public class ItemDaoJdbc implements ItemDao{
                         rs.getInt(4));
                 result.add(itemModel);
             }
-            System.out.println("result: "+result);
+            System.out.println("result: " + result);
             return result;
         } catch (SQLException e) {
             throw new RuntimeException("Error while reading all items", e);

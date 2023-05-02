@@ -2,8 +2,7 @@ package com.codecool.dungeoncrawl.logic.items;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 
-public class BluePotion extends Item{
-
+public class BluePotion extends Item {
 
 
     public BluePotion(Cell cell) {

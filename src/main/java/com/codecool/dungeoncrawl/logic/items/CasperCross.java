@@ -1,8 +1,9 @@
 package com.codecool.dungeoncrawl.logic.items;
+
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Casper;
 
-public class CasperCross extends Item{
+public class CasperCross extends Item {
 
     private Casper assignedCasper;
 
@@ -10,7 +11,7 @@ public class CasperCross extends Item{
         super(cell);
     }
 
-    public CasperCross(Cell cell, Casper assignedCasper){
+    public CasperCross(Cell cell, Casper assignedCasper) {
         super(cell);
         this.assignedCasper = assignedCasper;
     }

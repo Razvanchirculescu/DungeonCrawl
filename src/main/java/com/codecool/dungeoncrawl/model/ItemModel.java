@@ -2,7 +2,7 @@ package com.codecool.dungeoncrawl.model;
 
 import com.codecool.dungeoncrawl.logic.items.Item;
 
-public class ItemModel extends BaseModel{
+public class ItemModel extends BaseModel {
 
     private String itemName;
     private int x;

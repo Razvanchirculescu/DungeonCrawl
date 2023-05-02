@@ -2,7 +2,7 @@ package com.codecool.dungeoncrawl.model;
 
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 
-public class ActorModel extends BaseModel{
+public class ActorModel extends BaseModel {
 
     private String actorName;
     private int hp;

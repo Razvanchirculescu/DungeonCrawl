@@ -4,30 +4,38 @@ import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
-import com.codecool.dungeoncrawl.logic.actors.*;
+import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.actors.Casper;
+import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.items.Item;
 import com.codecool.dungeoncrawl.logic.items.Key;
+import com.codecool.dungeoncrawl.logic.items.Sword;
 import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.codecool.dungeoncrawl.util.Music;
-import com.codecool.dungeoncrawl.logic.items.Sword;
 import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.scene.input.*;
-import java.sql.Date;
-import java.time.LocalDate;
+
 import java.io.FileNotFoundException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,11 +49,6 @@ public class Main extends Application {
     Music footstepsSoundEffect;
     Music attackSoundEffect;
     String userName = getUserName();
-    GameMap map = getGameMap(userName);
-    Canvas canvas = new Canvas(
-            map.getDisplayWidth() * Tiles.TILE_WIDTH,
-            map.getDisplayHeight() * Tiles.TILE_WIDTH);
-    GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
     Label itemInventoryLabel = new Label();
     Label swordLabel = new Label();
@@ -54,14 +57,16 @@ public class Main extends Application {
     Label damageLabel = new Label();
     Label playerNameLabel = new Label();
     GameDatabaseManager dbManager;
-
+    GameMap map = getGameMap(userName);
+    Canvas canvas = new Canvas(
+            map.getDisplayWidth() * Tiles.TILE_WIDTH,
+            map.getDisplayHeight() * Tiles.TILE_WIDTH);
+    GraphicsContext context = canvas.getGraphicsContext2D();
     String resultPlayerNameLabel;
 
 
-    int deltaX =0;
-    int deltaY =0;
-
-
+    int deltaX = 0;
+    int deltaY = 0;
 
 
     public static void main(String[] args) {
@@ -71,8 +76,8 @@ public class Main extends Application {
     public GameMap getGameMap(String name) {
         setupDbManager();
         List<String> names = dbManager.getAllNames();
-        if(names.contains(name)) {
-            GameMap map1 =MapLoader.loadBlankMap("/emptymap2.txt");
+        if (names.contains(name)) {
+            GameMap map1 = MapLoader.loadBlankMap("/emptymap2.txt");
             map1 = populateGameMap(map1);
             return map1;
         } else {
@@ -82,7 +87,6 @@ public class Main extends Application {
 
     public String getUserName() {
         TextInputDialog nameInputDialogBox = new TextInputDialog("Name goes here");
-//        nameInputDialogBox.contentTextProperty().set("-fx-font-family: 'serif'");
         nameInputDialogBox.setTitle("NameBox");
         nameInputDialogBox.setHeaderText("Please enter your name below");
         Optional<String> result = nameInputDialogBox.showAndWait();
@@ -105,18 +109,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-////        TESTS for serializer
-//        PlayerModel playerModelTest = setPlayerModel(map.getPlayer());
-//        Date currentSQLTime = getCurrentSQLTime();
-//        String stringMap = getStringObjGson(map.getCell(7,1).getActor().getHealth());
         String stringMap = "map2.txt";
-//        GameStateModel gameStateTest = setGameState(stringMap, currentSQLTime, playerModelTest);
-//        System.out.println("TEST: "+stringMap);
-//        String testPlayer = getStringObjGson(gameStateTest);
-//        System.out.println("Back: "+testPlayer);
-//        GameStateModel resultBack = getObjFromJSON_Gson(testPlayer);
-//        System.out.println("result: "+resultBack.toString());
-//        System.out.println("original: "+gameStateTest.toString());
 
         GridPane ui = new GridPane();
         ui.setPrefWidth(300);
@@ -155,22 +148,33 @@ public class Main extends Application {
         Button muteButton = new Button();
         muteButton.setText("Mute audio");
         muteButton.setFocusTraversable(false);
-        ui.add(muteButton, 0, 22);
+        ui.add(muteButton, 0, 23);
         muteButton.setOnAction(actionEvent -> {
             if (muteButton.getText().equals("Mute audio")) {
                 gameplayMusic.stop();
                 muteButton.setText("Unmute audio");
-            }else {
-                 muteButton.setText("Unmute audio");
-                 gameplayMusic.play();
-                 muteButton.setText("Mute audio");
+            } else {
+                muteButton.setText("Unmute audio");
+                gameplayMusic.play();
+                muteButton.setText("Mute audio");
             }
+        });
+
+        Button restartButton = new Button();
+        restartButton.setText("Restart game");
+        restartButton.setFocusTraversable(false);
+        ui.add(restartButton, 0, 21);
+        restartButton.setOnAction(actionEvent -> {
+            map = MapLoader.loadMap();
+            refresh(deltaX, deltaY);
+
+
         });
 
         Button loadButton = new Button();
         loadButton.setText("Load Saved Game");
         loadButton.setFocusTraversable(false);
-        ui.add(loadButton, 0, 21);
+        ui.add(loadButton, 0, 22);
         loadButton.setOnAction(actionEvent -> {
             List<String> savedGamesList = new ArrayList<>();
             savedGamesList.add("Save1");
@@ -184,20 +188,11 @@ public class Main extends Application {
             loadGameDialog.setHeaderText("");
             loadGameDialog.setContentText("Choose a save to load");
             Optional<String> result = loadGameDialog.showAndWait();
-           // if(result.isPresent()){
-                //load saved game
-           // }
         });
 
-
-//        Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
-//        StyleManager.getInstance().addUserAgentStylesheet(getClass()
-//                .getResource("src/main/resources/style.css").toString());
-//        StyleManager.getInstance().addUserAgentStylesheet(getResource("src/main/resources/style.css").toString());
-//        StyleManager.getInstance().addUserAgentStylesheet("-fx-font-family: 'serif'");
         playerNameLabel.setText(userName);
         System.out.println(userName);
-        getPlayerNameLabel();
+
         Scene scene = new Scene(borderPane);
         scene.getRoot().setStyle("-fx-font-family: 'serif'");
         primaryStage.setScene(scene);
@@ -224,40 +219,40 @@ public class Main extends Application {
     }
 
     //added for loading game with player in some random position on the map
-    private void setInitialDxDy(){
-        if (map.getPlayer().getX()<(map.getDisplayWidth()-1)/2) {
-            deltaX=0;
-        } else if (map.getPlayer().getX()>= (map.getMapWidth()- (map.getDisplayWidth()-1)/2)) {
-            deltaX=map.getMapWidth()- map.getDisplayWidth();
+    private void setInitialDxDy() {
+        if (map.getPlayer().getX() < (map.getDisplayWidth() - 1) / 2) {
+            deltaX = 0;
+        } else if (map.getPlayer().getX() >= (map.getMapWidth() - (map.getDisplayWidth() - 1) / 2)) {
+            deltaX = map.getMapWidth() - map.getDisplayWidth();
         } else {
-            deltaX=map.getPlayer().getX()-(map.getDisplayWidth()-1)/2;
+            deltaX = map.getPlayer().getX() - (map.getDisplayWidth() - 1) / 2;
         }
-        if (map.getPlayer().getY()<(map.getDisplayHeight()-1)/2) {
-            deltaY=0;
-        } else if (map.getPlayer().getY()>=(map.getMapHeight()-(map.getDisplayHeight()-1)/2)) {
-            deltaY=map.getMapHeight()- (map.getDisplayHeight()-1)/2;
+        if (map.getPlayer().getY() < (map.getDisplayHeight() - 1) / 2) {
+            deltaY = 0;
+        } else if (map.getPlayer().getY() >= (map.getMapHeight() - (map.getDisplayHeight() - 1) / 2)) {
+            deltaY = map.getMapHeight() - (map.getDisplayHeight() - 1) / 2;
         } else {
-            deltaY=map.getPlayer().getY()-(map.getDisplayHeight()-1)/2;
+            deltaY = map.getPlayer().getY() - (map.getDisplayHeight() - 1) / 2;
         }
     }
 
 
     private void onKeyPressed(KeyEvent keyEvent) {
-        if (keyEvent.isControlDown()&& keyEvent.getCode()==KeyCode.S){
-             DataSaver dataSaver = new DataSaver();
-             dataSaver.saveData(dbManager, map);
+        if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.S) {
+            DataSaver dataSaver = new DataSaver();
+            dataSaver.saveData(dbManager, map);
         }
         switch (keyEvent.getCode()) {
             case UP:
                 setSoundIsPlaying(footstepsSoundEffect, true);
-                if (deltaY==0) {
+                if (deltaY == 0) {
                     map.getPlayer().move(0, -1);
-                } else if ((deltaY>= map.getMapHeight()-map.getDisplayHeight()) &&
+                } else if ((deltaY >= map.getMapHeight() - map.getDisplayHeight()) &&
                         (map.getPlayer().getY() >
-                                (map.getMapHeight()-(map.getDisplayHeight()-1)/2))) {
+                                (map.getMapHeight() - (map.getDisplayHeight() - 1) / 2))) {
                     map.getPlayer().move(0, -1);
                 } else {
-                    if (map.getPlayer().validMove(0,-1)) {
+                    if (map.getPlayer().validMove(0, -1)) {
                         deltaY -= 1;
                         map.getPlayer().move(0, -1);
                     }
@@ -266,12 +261,12 @@ public class Main extends Application {
                 break;
             case DOWN:
                 setSoundIsPlaying(footstepsSoundEffect, true);
-                if (deltaY==0 && (map.getPlayer().getY() < (map.getDisplayHeight()-1)/2)) {
+                if (deltaY == 0 && (map.getPlayer().getY() < (map.getDisplayHeight() - 1) / 2)) {
                     map.getPlayer().move(0, 1);
-                } else if (deltaY >= (map.getMapHeight()-map.getDisplayHeight())) {
+                } else if (deltaY >= (map.getMapHeight() - map.getDisplayHeight())) {
                     map.getPlayer().move(0, 1);
                 } else {
-                    if (map.getPlayer().validMove(0,1)) {
+                    if (map.getPlayer().validMove(0, 1)) {
                         deltaY += 1;
                         map.getPlayer().move(0, 1);
                     }
@@ -280,14 +275,14 @@ public class Main extends Application {
                 break;
             case LEFT:
                 setSoundIsPlaying(footstepsSoundEffect, true);
-                if (deltaX==0) {
+                if (deltaX == 0) {
                     map.getPlayer().move(-1, 0);
-                } else if ((deltaX>= map.getMapWidth()-map.getDisplayWidth()) &&
+                } else if ((deltaX >= map.getMapWidth() - map.getDisplayWidth()) &&
                         (map.getPlayer().getX() >
-                                (map.getMapWidth()-(map.getDisplayWidth()-1)/2))) {
+                                (map.getMapWidth() - (map.getDisplayWidth() - 1) / 2))) {
                     map.getPlayer().move(-1, 0);
                 } else {
-                    if (map.getPlayer().validMove(-1,0)) {
+                    if (map.getPlayer().validMove(-1, 0)) {
                         deltaX -= 1;
                         map.getPlayer().move(-1, 0);
                     }
@@ -296,12 +291,12 @@ public class Main extends Application {
                 break;
             case RIGHT:
                 setSoundIsPlaying(footstepsSoundEffect, true);
-                if (deltaX==0 && (map.getPlayer().getX() < (map.getDisplayWidth()-1)/2)) {
+                if (deltaX == 0 && (map.getPlayer().getX() < (map.getDisplayWidth() - 1) / 2)) {
                     map.getPlayer().move(1, 0);
-                } else if (deltaX >= (map.getMapWidth()-map.getDisplayWidth())) {
+                } else if (deltaX >= (map.getMapWidth() - map.getDisplayWidth())) {
                     map.getPlayer().move(1, 0);
                 } else {
-                    if (map.getPlayer().validMove(1,0)) {
+                    if (map.getPlayer().validMove(1, 0)) {
                         deltaX += 1;
                         map.getPlayer().move(1, 0);
                     }
@@ -334,7 +329,7 @@ public class Main extends Application {
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getDisplayWidth(); x++) {
             for (int y = 0; y < map.getDisplayHeight(); y++) {
-                Cell cell = map.getCell(x+deltaX, y+deltaY);
+                Cell cell = map.getCell(x + deltaX, y + deltaY);
                 if (cell.getActor() != null) {
                     Tiles.drawTile(context, cell.getActor(), x, y);
                 } else if (cell.getItem() != null) {
@@ -425,19 +420,19 @@ public class Main extends Application {
     }
 
     //tests on row 88 !!!
-    public PlayerModel setPlayerModel (Player player) {
+    public PlayerModel setPlayerModel(Player player) {
         return new PlayerModel(player);
     }
 
-    public Date getCurrentSQLTime () {
+    public Date getCurrentSQLTime() {
         return Date.valueOf(LocalDate.now());
     }
 
-    public <K> String getStringObjGson (K obj) {
+    public <K> String getStringObjGson(K obj) {
         return new Gson().toJson(obj);
     }
 
-    public GameStateModel getObjFromJSON_Gson (String mapString) {
+    public GameStateModel getObjFromJSON_Gson(String mapString) {
         return new Gson().fromJson(mapString, GameStateModel.class);
     }
 

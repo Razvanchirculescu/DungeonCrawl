@@ -1,12 +1,12 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
+import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.items.BluePotion;
 import com.codecool.dungeoncrawl.logic.items.Item;
 import com.codecool.dungeoncrawl.logic.items.Key;
 import com.codecool.dungeoncrawl.logic.items.Sword;
 import com.codecool.dungeoncrawl.logic.levels.OpenDoor;
 import com.codecool.dungeoncrawl.util.Music;
-import com.codecool.dungeoncrawl.logic.Cell;
 
 import java.util.Objects;
 
@@ -15,7 +15,6 @@ public class Player extends Actor {
     Music attackSoundEffect;
     Music inventoryPickUpItem;
     Music openDoor;
-//    String name;
     int x;
     int y;
     String playerName = "name";
@@ -27,12 +26,6 @@ public class Player extends Actor {
         this.setDamage(5);
     }
 
-//    public Player(String name, int hp, int x, int y) {
-//        this.name = name;
-//        this.setHealth(hp);
-//        this.x = x;
-//        this.y = y;
-//    }
 
     public String getTileName() {
         return "player";
@@ -90,7 +83,7 @@ public class Player extends Actor {
                 this.getCell().setItem(null);
             } else if (this.getCell().getItem().getTileName().equals("sword") ||
                     this.getCell().getItem().getTileName().equals("key") ||
-                    this.getCell().getItem().getTileName().equals("bluePotion"))  {
+                    this.getCell().getItem().getTileName().equals("bluePotion")) {
                 this.getItems().add(this.getCell().getItem());
                 inventoryPickUpItem = new Music("src/main/resources/mixkit-magic-sweep-game-trophy-257.wav");
                 inventoryPickUpItem.play();
@@ -154,11 +147,11 @@ public class Player extends Actor {
         }
     }
 
-    public void setName(String name) {
-        this.name=name;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

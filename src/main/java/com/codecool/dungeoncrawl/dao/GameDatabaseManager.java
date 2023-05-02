@@ -5,18 +5,15 @@ import com.codecool.dungeoncrawl.logic.items.Item;
 import com.codecool.dungeoncrawl.model.ActorModel;
 import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.ItemModel;
-import com.codecool.dungeoncrawl.model.PlayerModel;
 import org.postgresql.ds.PGSimpleDataSource;
 
-
-import java.io.File;  // Import the File class
-import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.util.List;
-import java.util.Scanner; // Import the Scanner class to read text files
-
 import javax.sql.DataSource;
-import java.sql.*;
-
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Scanner;
 
 
 public class GameDatabaseManager {
@@ -24,7 +21,6 @@ public class GameDatabaseManager {
     private ItemDaoJdbc itemDao;
     private ActorModel actorModel;
     private GameStateDao gameStateDao;
-
 
 
     public void setup() throws SQLException, FileNotFoundException {
@@ -55,11 +51,11 @@ public class GameDatabaseManager {
     }
 
     public List<ActorModel> listAllActors(String name) {
-        return  actorDao.getAll(getGameStateId(name));
+        return actorDao.getAll(getGameStateId(name));
     }
 
     public List<ItemModel> listAllItem(String name) {
-        return  itemDao.getAll(getGameStateId(name));
+        return itemDao.getAll(getGameStateId(name));
     }
 
     public List<String> getAllNames() {
@@ -76,7 +72,7 @@ public class GameDatabaseManager {
         try {
             File myObj = new File("src/main/java/com/codecool/dungeoncrawl/.env");
             Scanner myReader = new Scanner(myObj);
-            for (int i=0; i<3; i++) {
+            for (int i = 0; i < 3; i++) {
                 String data = myReader.nextLine();
                 if (i == 0) {
                     dbName = data;
@@ -90,9 +86,7 @@ public class GameDatabaseManager {
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred. File not found!");
             e.printStackTrace();
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 

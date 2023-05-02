@@ -3,7 +3,11 @@ package com.codecool.dungeoncrawl;
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
-import com.codecool.dungeoncrawl.logic.actors.*;
+import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.actors.Casper;
+import com.codecool.dungeoncrawl.logic.actors.CreepyBug;
+import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.logic.actors.Skeleton;
 import com.codecool.dungeoncrawl.logic.items.BluePotion;
 import com.codecool.dungeoncrawl.logic.items.Item;
 import com.codecool.dungeoncrawl.logic.items.Key;
@@ -26,10 +30,10 @@ public class DataLoader {
         this.map = map;
     }
 
-    public List<Actor> getAllActors(String name){
+    public List<Actor> getAllActors(String name) {
         List<ActorModel> actorModels = dbManager.listAllActors(name);
         List<Actor> actors = new ArrayList<>();
-        for(ActorModel actorModel: actorModels) {
+        for (ActorModel actorModel : actorModels) {
             Cell cell = map.getCell(actorModel.getX(), actorModel.getY());
             Actor actor;
             switch (actorModel.getActorName()) {
@@ -54,10 +58,10 @@ public class DataLoader {
         return actors;
     }
 
-    public List<Item> getAllItems(String name){
+    public List<Item> getAllItems(String name) {
         List<ItemModel> itemModels = dbManager.listAllItem(name);
         List<Item> items = new ArrayList<>();
-        for(ItemModel itemModel: itemModels) {
+        for (ItemModel itemModel : itemModels) {
             Cell cell = map.getCell(itemModel.getX(), itemModel.getY());
             Item item;
             switch (itemModel.getItemName()) {
@@ -79,7 +83,7 @@ public class DataLoader {
             }
             items.add(item);
         }
-        System.out.println("Items: "+items);
+        System.out.println("Items: " + items);
         return items;
     }
 }

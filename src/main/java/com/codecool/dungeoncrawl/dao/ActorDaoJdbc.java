@@ -1,13 +1,19 @@
 package com.codecool.dungeoncrawl.dao;
 
 import com.codecool.dungeoncrawl.model.ActorModel;
+
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ActorDaoJdbc implements ActorDao {
     private DataSource dataSource;
+
     public ActorDaoJdbc(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -57,7 +63,7 @@ public class ActorDaoJdbc implements ActorDao {
             List<ActorModel> result = new ArrayList<>();
             while (rs.next()) { // while result set pointer is positioned before or on last row read authors
                 ActorModel actor = new ActorModel(rs.getString(2), rs.getInt(3),
-                rs.getInt(4), rs.getInt(5), rs.getInt(6));
+                        rs.getInt(4), rs.getInt(5), rs.getInt(6));
                 result.add(actor);
             }
             System.out.println(result);

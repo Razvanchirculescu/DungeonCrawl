@@ -1,10 +1,13 @@
 package com.codecool.dungeoncrawl.dao;
 
 import com.codecool.dungeoncrawl.model.GameStateModel;
-import com.codecool.dungeoncrawl.model.ItemModel;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +46,7 @@ public class GameStateDaoJdbc implements GameStateDao {
 
     public Object getId(String name) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT id FROM game_state WHERE save_name = " + "'"+name+"'";
+            String sql = "SELECT id FROM game_state WHERE save_name = " + "'" + name + "'";
             PreparedStatement st = conn.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
             if (!rs.next()) {
@@ -68,7 +71,7 @@ public class GameStateDaoJdbc implements GameStateDao {
             }
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException("Error while reading all names" , e);
+            throw new RuntimeException("Error while reading all names", e);
         }
     }
 }
